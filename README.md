@@ -1,6 +1,6 @@
 lowballers (FREE STUFF)
 
-Adding items (3-6 stories,Tyler)
+Adding items (3 stories,Tyler)
 
 User Profile (3 stories, Adriel)
 
