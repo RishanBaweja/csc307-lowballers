@@ -1,6 +1,6 @@
 lowballers (FREE STUFF)
 
-Adding items (6 stories)
+Adding items (3-6 stories, maybe consider doing a User Profile)
 
 Viewing items (3 stories, Shane)
 
