@@ -10,8 +10,6 @@ const port = 8000;
 app.use(cors());
 app.use(express.json());
 
-app.use(cors({ origin: process.env.CORS_ORIGIN || "http://localhost:5173" }));
-
 mongoose.set("debug", true);
 
 async function start() {
