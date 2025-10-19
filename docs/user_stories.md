@@ -10,7 +10,7 @@
 
 ## User Stories
 
-### Messaging about Items (3 stroes, Rishan)
+### Messaging about Items (3 stories, Rishan)
 1. As a college student who just moved into an off-campus house, I want to populate my room with free, older furniture for free because I am only living here for a few years and I want to keep costs down, so I will look through the Lowballers website to find homeowners in my area who are looking to get rid of old furniture.
 2. As an older homeowner, I want to get rid of my old items that clutters my space, so I will use the Lowballers website to find those who are in my area and are seriously interested in my items. To avoid spam messages from unserious buyers, I will set my availability prematurely and list out the major details of the item.
 3. As someone who is looking to get furniture ASAP, I will schedule a date that works for myself and the seller when I am sending them a message, so that we are both have a date that we plan on meeting, which keeps us both accountable.
