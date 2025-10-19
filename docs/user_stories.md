@@ -17,8 +17,7 @@ As a college student who just moved into an off-campus house, I want to populate
 As an older homeowner, I want to get rid of my old items that clutters my space, so I will use the Lowballers website to find those who are in my area and are seriously interested in my items. To avoid spam messages from unserious buyers, I will set my availability prematurely and list out the major details of the item.
 
 ### Rishan - User Story 3
-
-### Rishan - User Story 4
+As someone who is looking to get furniture ASAP, I will schedule a date that works for myself and the seller when I am sending them a message, so that we are both have a date that we plan on meeting, which keeps us both accountable.
 
 
 Adding items (3-6 stories, maybe consider doing a User Profile, Tyler)
@@ -27,16 +26,3 @@ Viewing items (3 stories, Shane)
 
 Messaging user (3 stories, rishan)
 
-User Story 1: As someone looking for more friends to game with, I want to be able to find people with similar skill level and interests, so that we can game together.
-
-Exception: Don’t want really random people Handling: Recommending based on mutuals, age group, location
-
-User Story 2: As a middle aged man getting back into gaming, I want games to be recommended to me based on the ones I’ve enjoyed in the past, so I won’t have to search endlessly on google.
-
-Exception: Recommending games to someone that hasn’t played any games before Handling: Recommendations based on friends and popular games from multiple genres
-
-User Story 3: As a teenager with lots of friends who game, I want to see who is playing what with whom, so I can see who I might want to game with.
-
-Exception: Don’t want friends to see that you are playing something Handling: Invisible mode that doesn’t keep track of what your playing
-
-User Story 4: As a serious game critiquer, I want to be able to voice my critiques in a detailed manner and rate different aspects of the game on a scale of 1-10.
