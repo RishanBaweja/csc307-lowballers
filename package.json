@@ -4,19 +4,30 @@
   "description": "",
   "license": "ISC",
   "author": "",
-  "type": "commonjs",
+  "type": "module",
   "main": "index.js",
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npm --prefix react-frontend run dev",
-    "build": "npm --prefix react-frontend run build",
-    "preview": "npm --prefix react-frontend run preview"
+    "dev": "npm --prefix packages/react-frontend run dev",
+    "build": "npm --prefix packages/react-frontend run build",
+    "preview": "npm --prefix packages/react-frontend run preview",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "workspaces": [
     "packages/*"
   ],
   "dependencies": {
     "mongoose": "^8.19.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.38.0",
+    "eslint": "^9.38.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^16.4.0",
+    "prettier": "^3.6.2"
   }
 }

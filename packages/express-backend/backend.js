@@ -2,7 +2,14 @@ import express from "express";
 import cors from "cors";
 import user_functions from "./user-services.js";
 import mongoose from "mongoose";
-import "dotenv/config";
+import { config } from "dotenv";
+
+// Load .env from project root
+config({ path: "../../.env" });
+
+// Debug: Check if environment variables are loaded
+console.log("MONGO_URI loaded:", !!process.env.MONGO_URI);
+console.log("DB_NAME loaded:", !!process.env.DB_NAME);
 
 const app = express();
 const port = 8000;
