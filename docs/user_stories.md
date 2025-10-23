@@ -29,8 +29,8 @@
 ### User Profile (3 stories, Adriel)
 
 1. As a user who frequently gives away items, I want to create and manage my profile with a short bio and profile picture, so others can recognize me as a lister.
-2. As a user viewing another person's profile, I want to see their previous listings and reviews, so I can guage their relibility before messaging them about their item.
-3. As a user concered about privacy, I want to control what personal information (name, photo, location, and etc.) is visible on my progile, so I feel comortable sharing and interacting on the platform with others.
+2. As a user viewing another person's profile, I want to see their previous listings and reviews, so I can guage their reliability before messaging them about their item.
+3. As a user concered about privacy, I want to control what personal information (name, photo, location, and etc.) is visible on my profile, so I feel comortable sharing and interacting on the platform with others.
 
 ### Viewing items (3 stories, Shane)
 
