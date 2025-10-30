@@ -55,7 +55,7 @@ async function start() {
         .findUserById(id)
         .then(result => res.status(200).json(result))
         .catch(err => {
-          res.status(404).json({ err: "Could not find" });
+          res.status(404).json({ error: "Could not find" });
         });
     });
 
