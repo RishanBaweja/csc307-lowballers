@@ -11,7 +11,7 @@ function MyApp() {
     const id = row._id ?? row.id;
     const promise = fetch(`http://localhost:8000/users/${id}`, {
       method: "DELETE",
-    }).then((res) => {
+    }).then(res => {
       if (res.status === 204) {
         const updated = characters.filter((character, i) => {
           return i !== index;
@@ -31,9 +31,9 @@ function MyApp() {
 
   useEffect(() => {
     fetchUsers()
-      .then((res) => res.json())
-      .then((json) => setCharacters(json["users_list"]))
-      .catch((error) => {
+      .then(res => res.json())
+      .then(json => setCharacters(json["users_list"]))
+      .catch(error => {
         console.log(error);
       });
   }, []);
@@ -45,7 +45,7 @@ function MyApp() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(person),
-    }).then((res) => {
+    }).then(res => {
       if (!res.ok) {
         throw new Error("Failed to Post User");
       }
@@ -55,8 +55,8 @@ function MyApp() {
 
   function updateList(person) {
     postUser(person)
-      .then((data) => setCharacters((prev) => [...prev, data]))
-      .catch((error) => {
+      .then(data => setCharacters(prev => [...prev, data]))
+      .catch(error => {
         console.log(error);
       });
   }

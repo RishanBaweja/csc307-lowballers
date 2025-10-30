@@ -41,9 +41,10 @@ async function start() {
           ? user_functions.findUserByNameAndJob(name, job)
           : user_functions.getUsers(name, job);
       Promise.resolve(p)
-        .then((result) => res.status(200).json({ users_list: result ?? [] }))
-        .catch((err) => {
+        .then(result => res.status(200).json({ users_list: result ?? [] }))
+        .catch(err => {
           console.error("could not fetch users:", err);
+          res.status(500).json({ error: "Failed to fetch users" });
         });
     });
 
@@ -52,8 +53,8 @@ async function start() {
       const { id } = req.params;
       return user_functions
         .findUserById(id)
-        .then((result) => res.status(200).json(result))
-        .catch((err) => {
+        .then(result => res.status(200).json(result))
+        .catch(err => {
           res.status(404).json({ err: "Could not find" });
         });
     });
@@ -63,9 +64,10 @@ async function start() {
       const { name, job } = req.body ?? {};
       return user_functions
         .addUser({ name, job })
-        .then((result) => res.status(201).json(result))
-        .catch((err) => {
+        .then(result => res.status(201).json(result))
+        .catch(err => {
           console.error("addUser failed:", err);
+          res.status(500).json({ error: "Failed to add user" });
         });
     });
 
@@ -74,9 +76,10 @@ async function start() {
       const { id } = req.params;
       return user_functions
         .deleteUser(id)
-        .then((result) => res.status(204).json(result))
-        .catch((err) => {
+        .then(result => res.status(204).json(result))
+        .catch(err => {
           console.error("deleteUser failed:", err);
+          res.status(500).json({ error: "Failed to delete user" });
         });
     });
   } catch (err) {

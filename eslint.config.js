@@ -63,7 +63,7 @@ export default [
       // React-specific rules
       "react/prop-types": "warn", // Change from error to warning
       "react/react-in-jsx-scope": "off", // Not needed in React 17+
-      
+
       // Custom rules examples
       "no-unused-vars": "error",
       "no-console": "warn", // Warn about console.log in frontend
