@@ -1,7 +1,7 @@
 import {User, Item, Catalog, Message, Inbox} from './db-schema.js';
 
 
-//User-related DB functions
+//User-related DB functions 
 
 function addUser(data) {
     const userToAdd = new User(data);
@@ -9,7 +9,7 @@ function addUser(data) {
 }
 
 function getUsers() {
-    return User.find();
+    return User.find(); 
 }
 
 function findUserById(id) {
