@@ -1,8 +1,8 @@
 import express from "express";
 import cors from "cors";
-import user_functions from "./user-services.js";
 import mongoose from "mongoose";
 import { config } from "dotenv";
+import db from "./db-services.js";
 
 // Load .env from project root
 config({ path: "../../.env" });
@@ -10,6 +10,7 @@ config({ path: "../../.env" });
 // Debug: Check if environment variables are loaded
 console.log("MONGO_URI loaded:", !!process.env.MONGO_URI);
 console.log("DB_NAME loaded:", !!process.env.DB_NAME);
+
 
 const app = express();
 const port = 8000;
@@ -24,68 +25,73 @@ async function start() {
     await mongoose.connect(process.env.MONGO_URI, {
       dbName: process.env.DB_NAME,
     });
-    console.log("Mongo connected");
+    console.log("Connected DB:", mongoose.connection.name);
 
     // Basic API endpoint
     app.get("/", (req, res) => {
       res.send("Hello world!");
     });
-
-    //API endpoint to get users
-    app.get("/users", (req, res) => {
-      const name = req.query.name;
-      const job = req.query.job;
-
-      const p =
-        name !== undefined && job !== undefined
-          ? user_functions.findUserByNameAndJob(name, job)
-          : user_functions.getUsers(name, job);
-      Promise.resolve(p)
-        .then((result) => res.status(200).json({ users_list: result ?? [] }))
-        .catch((err) => {
-          console.error("could not fetch users:", err);
-        });
+    app.get("/users", async (req, res) => {
+      try {
+        const users = await db.getUsers();
+        const mapped = users.map(u => ({
+          id: u._id,
+          username: u.username,
+          password: u.password
+        }));
+        res.status(200).json({ users_list: mapped });
+      } catch (err) {
+        console.error("could not fetch users:", err);
+        res.status(500).json({ error: err.message });
+      }
     });
 
-    //API endpoint to get users by ID
-    app.get("/users/:id", (req, res) => {
-      const { id } = req.params;
-      return user_functions
-        .findUserById(id)
-        .then((result) => res.status(200).json(result))
-        .catch((err) => {
-          res.status(404).json({ err: "Could not find" });
+
+    app.get("/users/:id", async (req, res) => {
+      try {
+        const user = await db.findUserById(req.params.id);
+        if (!user) return res.status(404).json({ error: "User not found" });
+        res.status(200).json({
+          id: user._id,
+          username: user.username,
+          password: user.password,
         });
+      } catch (err) {
+        res.status(500).json({ error: err.message });
+      }
     });
 
-    //Add a user to users_list
-    app.post("/users", (req, res) => {
-      const { name, job } = req.body ?? {};
-      return user_functions
-        .addUser({ name, job })
-        .then((result) => res.status(201).json(result))
-        .catch((err) => {
-          console.error("addUser failed:", err);
+    app.post("/users", async (req, res) => {
+      try {
+        const { username, password } = req.body;
+        const newUser = await db.addUser({ username: username, password: password });
+        res.status(201).json({
+          id: newUser._id,
+          username: newUser.username,
+          password: newUser.password,
         });
+      } catch (err) {
+        res.status(400).json({ error: err.message });
+      }
     });
 
-    //Delete user from users_list by id
-    app.delete("/users/:id", (req, res) => {
-      const { id } = req.params;
-      return user_functions
-        .deleteUser(id)
-        .then((result) => res.status(204).json(result))
-        .catch((err) => {
-          console.error("deleteUser failed:", err);
-        });
+    app.delete("/users/:id", async (req, res) => {
+      try {
+        await db.deleteUser(req.params.id);
+        res.status(204).end();
+      } catch (err) {
+        res.status(400).json({ error: err.message });
+      }
     });
-  } catch (err) {
-    console.error("Mongo connect failed:", err);
-    process.exit(1);
-  }
+
+    app.listen(port, () => {
+      console.log(`Example app listening at http://localhost:${port}`);
+    });
+    } catch (err) {
+      console.error("Mongo connect failed:", err);
+      process.exit(1);
+    }
 }
 start();
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
-});
+
