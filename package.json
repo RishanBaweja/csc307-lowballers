@@ -1,7 +1,7 @@
 {
   "name": "lab1",
   "version": "1.0.0",
-  "description": "",
+  "description": "- ESLint: Currently abiding by default ESLint rules, we may make changes in the future depending on requirements.\r  - Prettier: Following the formatting rules at the moment.\r    - \"semi\": true,\r    - \"trailingComma\": \"es5\",\r    - \"singleQuote\": false,\r    - \"printWidth\": 80,\r    - \"tabWidth\": 2,\r    - \"useTabs\": false,\r    - \"bracketSpacing\": true,\r    - \"arrowParens\": \"avoid\"\r # Install Info\r   - ESLint: npm init @eslint/config@latest, then add rules into configuration file\r   - Prettier:\r     - npm install --save-dev --save-exact prettier\r     - Then, create empty config file: node --eval \"fs.writeFileSync('.prettierrc','{}\\n')\"\r     - To avoid formatting certain files: node --eval \"fs.writeFileSync('.prettierignore','# Ignore artifacts:\\nbuild\\ncoverage\\n')\"",
   "license": "ISC",
   "author": "",
   "type": "module",
@@ -13,12 +13,15 @@
     "build": "npm --prefix packages/react-frontend run build",
     "preview": "npm --prefix packages/react-frontend run preview",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "workspaces": [
     "packages/*"
   ],
   "dependencies": {
+    "mongodb": "^6.20.0",
     "mongoose": "^8.19.1"
   },
   "devDependencies": {
@@ -29,5 +32,17 @@
     "eslint-plugin-react": "^7.37.5",
     "globals": "^16.4.0",
     "prettier": "^3.6.2"
-  }
+  },
+  "directories": {
+    "doc": "docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RishanBaweja/csc307-lowballers.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/RishanBaweja/csc307-lowballers/issues"
+  },
+  "homepage": "https://github.com/RishanBaweja/csc307-lowballers#readme"
 }

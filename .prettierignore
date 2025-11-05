@@ -1,3 +1,33 @@
-# Ignore artifacts:
+# deps
+node_modules
+packages/*/node_modules
+
+# build outputs
+dist
 build
+packages/*/dist
+packages/*/build
 coverage
+
+# caches
+.vite
+packages/*/.vite
+.cache
+.eslintcache
+
+# logs & env
+*.log
+.env
+.env.*
+
+# static assets (don’t format files in public except index.html)
+packages/react-frontend/public/**
+!packages/react-frontend/public/index.html
+
+# minified/bundled
+*.min.js
+*.bundle.js
+
+# OS cruft
+.DS_Store
+Thumbs.db
