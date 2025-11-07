@@ -5,7 +5,7 @@ import { createBrowserRouter, RouterProvider, Link } from "react-router-dom";
 
 import MyApp from "./MyApp";
 import Form from "./pages/Form.jsx";
-import Table from "./pages/Table.jsx";
+// import Table from "./pages/Table.jsx";
 import Layout from "./Layout.jsx";
 // import Home from "./pages/Home.jsx";
 import "./main.css";
@@ -37,7 +37,6 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <div>Welcome home!</div> },
       { path: "form", element: <Form /> },
-      { path: "table", element: <Table /> },
     ],
   },
 ]);
