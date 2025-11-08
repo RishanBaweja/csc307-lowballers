@@ -1,13 +1,11 @@
-// src/main.jsx
 import React from "react";
 import ReactDOMClient from "react-dom/client";
 import { createBrowserRouter, RouterProvider, Link } from "react-router-dom";
 
-import MyApp from "./MyApp";
-import Form from "./pages/Form.jsx";
-// import Table from "./pages/Table.jsx";
+// import MyApp from "./MyApp";
 import Layout from "./Layout.jsx";
-// import Home from "./pages/Home.jsx";
+import Home from "./pages/Home.jsx";
+import Inbox from "./pages/Inbox.jsx";
 import "./main.css";
 
 // If network connectivity issues, no defined route, user error, etc.
@@ -18,6 +16,15 @@ function RouteError() {
       <p>Something went wrong loading this page.</p>
     </div>
   );
+}
+
+async function handleSubmit(person) {
+  const res = await fetch("/api/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(person),
+  });
+  if (!res.ok) throw new Error(await res.text());
 }
 
 /*
@@ -35,8 +42,8 @@ const router = createBrowserRouter([
     element: <Layout />,
     errorElement: <RouteError />,
     children: [
-      { index: true, element: <div>Welcome home!</div> },
-      { path: "form", element: <Form /> },
+      { index: true, element: <Home /> },
+      { path: "inbox", element: <Inbox /> },
     ],
   },
 ]);
