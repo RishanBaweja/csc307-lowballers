@@ -1,9 +1,13 @@
-// src/MyApp.jsx
 import React, { useState, useEffect } from "react";
-import Table from "./pages/Table";
-import Form from "./pages/Form";
+import style from "./navbar.module.css";
+import { Link, Outlet } from "react-router-dom";
 
-function MyApp() {
+export default function Layout() {
+  /*
+   * I moved all functions into Layout.jsx and got rid of MyApp.jsx
+   * This will be how our pages look
+   *
+   */
   const [characters, setCharacters] = useState([]);
 
   function removeOneCharacter(index) {
@@ -11,7 +15,7 @@ function MyApp() {
     const id = row._id ?? row.id;
     const promise = fetch(`http://localhost:8000/users/${id}`, {
       method: "DELETE",
-    }).then((res) => {
+    }).then(res => {
       if (res.status === 204) {
         const updated = characters.filter((character, i) => {
           return i !== index;
@@ -31,9 +35,9 @@ function MyApp() {
 
   useEffect(() => {
     fetchUsers()
-      .then((res) => res.json())
-      .then((json) => setCharacters(json["users_list"]))
-      .catch((error) => {
+      .then(res => res.json())
+      .then(json => setCharacters(json["users_list"]))
+      .catch(error => {
         console.log(error);
       });
   }, []);
@@ -45,7 +49,7 @@ function MyApp() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(person),
-    }).then((res) => {
+    }).then(res => {
       if (!res.ok) {
         throw new Error("Failed to Post User");
       }
@@ -55,17 +59,30 @@ function MyApp() {
 
   function updateList(person) {
     postUser(person)
-      .then((data) => setCharacters((prev) => [...prev, data]))
-      .catch((error) => {
+      .then(data => setCharacters(prev => [...prev, data]))
+      .catch(error => {
         console.log(error);
       });
   }
 
+  /*
+   * This is our navbar, in order to add to it
+   * Make a Link to and follow that format
+   * Then go into main.jsx and add to the createBrowserRouter
+   * to create the route to the page
+   */
   return (
-    <div className="container">
-      <Table characterData={characters} removeCharacter={removeOneCharacter} />
-      <Form handleSubmit={updateList} />
+    <div className={style.shell}>
+      <header className={style.navbar}>
+        <h1 className={style.pagetitle}>Lowballers </h1>
+        <nav className={style.navlist}>
+          <Link to="/">Home</Link>
+          <Link to="/inbox"> Inbox</Link>
+        </nav>
+      </header>
+      <main className={style.content}>
+        <Outlet context={{ characters, updateList, removeOneCharacter }} />
+      </main>
     </div>
   );
 }
-export default MyApp;
