@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider, Link } from "react-router-dom";
 import Layout from "./Layout.jsx";
 import Home from "./pages/Home.jsx";
 import Inbox from "./pages/Inbox.jsx";
+import Items from "./pages/Items.jsx";
 import "./main.css";
 
 // If network connectivity issues, no defined route, user error, etc.
@@ -44,6 +45,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       { path: "inbox", element: <Inbox /> },
+      { path: "items", element: <Items /> },
     ],
   },
 ]);
