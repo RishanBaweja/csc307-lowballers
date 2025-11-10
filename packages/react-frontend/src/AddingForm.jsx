@@ -20,6 +20,20 @@ function AddingForm(props) {
     }));
   }
 
+  function handleImageChange(event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setItem((prevItem) => ({
+          ...prevItem,
+          image: e.target.result
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
   function submitForm() {
     props.handleSubmit(item);
     setItem({
@@ -45,6 +59,30 @@ function AddingForm(props) {
         onChange={handleChange}
         required
       />
+      <label htmlFor="image">Image</label>
+      <input
+        type="file"
+        name="image"
+        id="image"
+        accept="image/*"
+        onChange={handleImageChange}
+      />
+      {item.image && (
+        <div style={{ marginTop: "10px" }}>
+          <p>Image Preview:</p>
+          <img 
+            src={item.image} 
+            alt="Preview" 
+            style={{ 
+              maxWidth: "200px", 
+              maxHeight: "200px", 
+              objectFit: "cover",
+              border: "1px solid #ccc",
+              borderRadius: "4px"
+            }} 
+          />
+        </div>
+      )}
       <label htmlFor="description">description</label>
       <input
         type="text"
