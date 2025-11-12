@@ -1,7 +1,8 @@
 // src/main.jsx
 import React from "react";
 import ReactDOMClient from "react-dom/client";
-import MyApp from "./MyApp";
+// import MyApp from "./MyApp";
+import ProfilePage from "./profile_pages/ProfilePage.jsx";
 import "./main.css";
 
 const container = document.getElementById("root");
@@ -10,4 +11,7 @@ const container = document.getElementById("root");
 const root = ReactDOMClient.createRoot(container);
 
 // Initial render:
-root.render(<MyApp />);
+// root.render(<MyApp />);
+
+//Profile render:
+root.render(<ProfilePage />);
