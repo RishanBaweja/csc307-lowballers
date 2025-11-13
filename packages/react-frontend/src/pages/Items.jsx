@@ -23,7 +23,7 @@ function Items() {
       <h1>Add New Item</h1>
       <AddingForm handleSubmit={addItem} />
       
-      <h2>Your Items</h2>
+      <h2>Items</h2>
       <ItemTable items={items} removeItem={removeItem} />
     </div>
   );
