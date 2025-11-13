@@ -1,9 +1,13 @@
-// src/MyApp.jsx
 import React, { useState, useEffect } from "react";
-import Table from "./Table";
-import Form from "./Form";
+import style from "./navbar.module.css";
+import { Link, Outlet } from "react-router-dom";
 
-function MyApp() {
+export default function Layout() {
+  /*
+   * I moved all functions into Layout.jsx and got rid of MyApp.jsx
+   * This will be how our pages look
+   *
+   */
   const [characters, setCharacters] = useState([]);
 
   function removeOneCharacter(index) {
@@ -61,11 +65,24 @@ function MyApp() {
       });
   }
 
+  /*
+   * This is our navbar, in order to add to it
+   * Make a Link to and follow that format
+   * Then go into main.jsx and add to the createBrowserRouter
+   * to create the route to the page
+   */
   return (
-    <div className="container">
-      <Table characterData={characters} removeCharacter={removeOneCharacter} />
-      <Form handleSubmit={updateList} />
+    <div className={style.shell}>
+      <header className={style.navbar}>
+        <h1 className={style.pagetitle}>Lowballers </h1>
+        <nav className={style.navlist}>
+          <Link to="/">Home</Link>
+          <Link to="/inbox"> Inbox</Link>
+        </nav>
+      </header>
+      <main className={style.content}>
+        <Outlet context={{ characters, updateList, removeOneCharacter }} />
+      </main>
     </div>
   );
 }
-export default MyApp;

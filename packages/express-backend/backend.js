@@ -3,6 +3,8 @@ import cors from "cors";
 import mongoose from "mongoose";
 import { config } from "dotenv";
 import db from "./db-services.js";
+import authRoutes from "./auth-routes.js";
+import cookieParser from "cookie-parser";
 
 // Load .env from project root
 config({ path: "../../.env" });
@@ -14,8 +16,9 @@ console.log("DB_NAME loaded:", !!process.env.DB_NAME);
 const app = express();
 const port = 8000;
 
-app.use(cors());
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(express.json());
+app.use(cookieParser())
 
 mongoose.set("debug", true);
 
@@ -30,6 +33,12 @@ async function start() {
     app.get("/", (req, res) => {
       res.send("Hello world!");
     });
+    
+    // Auth routes (for login, register, logout, verify)
+    app.use("/auth", authRoutes);
+
+
+    // User-related endpoints
     app.get("/users", async (req, res) => {
       try {
         const users = await db.getUsers();
