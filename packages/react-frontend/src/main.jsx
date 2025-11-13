@@ -7,7 +7,9 @@ import Layout from "./Layout.jsx";
 import Home from "./pages/Home.jsx";
 import Inbox from "./pages/Inbox.jsx";
 import Items from "./pages/Items.jsx";
+import {AuthProvider} from "./context/AuthContext.jsx";
 import "./main.css";
+
 
 // If network connectivity issues, no defined route, user error, etc.
 function RouteError() {
@@ -52,6 +54,8 @@ const router = createBrowserRouter([
 
 ReactDOMClient.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>
 );
