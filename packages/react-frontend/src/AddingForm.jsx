@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import styles from "./addingform.module.css";
 
 function AddingForm(props) {
   const [item, setItem] = useState({
@@ -49,7 +50,7 @@ function AddingForm(props) {
   }
 
   return (
-    <form>
+    <form className={styles.addItemForm}>
       <label htmlFor="name">Name</label>
       <input
         type="text"
@@ -68,18 +69,11 @@ function AddingForm(props) {
         onChange={handleImageChange}
       />
       {item.image && (
-        <div style={{ marginTop: "10px" }}>
+        <div className={styles.imagePreview}>
           <p>Image Preview:</p>
           <img 
             src={item.image} 
             alt="Preview" 
-            style={{ 
-              maxWidth: "200px", 
-              maxHeight: "200px", 
-              objectFit: "cover",
-              border: "1px solid #ccc",
-              borderRadius: "4px"
-            }} 
           />
         </div>
       )}
