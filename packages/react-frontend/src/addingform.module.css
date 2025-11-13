@@ -1,0 +1,30 @@
+.addItemForm {
+  background: #f9f9f9;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  max-width: 500px;
+  margin: 2rem auto;
+}
+
+.addItemForm label {
+  margin-top: 1rem;
+}
+
+.addItemForm input[type="file"] {
+  margin-bottom: 1rem;
+}
+
+.imagePreview {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.imagePreview img {
+  width: 240px;
+  height: 240px;
+  object-fit: cover;
+  object-position: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}

@@ -3,6 +3,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import { config } from "dotenv";
 import db from "./db-services.js";
+import itemServices from "./item-services.js";
 import authRoutes from "./auth-routes.js";
 import cookieParser from "cookie-parser";
 
@@ -87,6 +88,55 @@ async function start() {
     app.delete("/users/:id", async (req, res) => {
       try {
         await db.deleteUser(req.params.id);
+        res.status(204).end();
+      } catch (err) {
+        res.status(400).json({ error: err.message });
+      }
+    });
+
+    // Item endpoints
+    app.get("/items", async (req, res) => {
+      try {
+        const items = await itemServices.getItems();
+        const mapped = items.map(itemServices.mapItemToResponse);
+        res.status(200).json({ items_list: mapped });
+      } catch (err) {
+        console.error("could not fetch items:", err);
+        res.status(500).json({ error: err.message });
+      }
+    });
+
+    app.get("/items/:id", async (req, res) => {
+      try {
+        const item = await itemServices.findItemById(req.params.id);
+        if (!item) return res.status(404).json({ error: "Item not found" });
+        res.status(200).json(itemServices.mapItemToResponse(item));
+      } catch (err) {
+        res.status(500).json({ error: err.message });
+      }
+    });
+
+    app.post("/items", async (req, res) => {
+      try {
+        const { name, description, location, amount, genre, image, userId } = req.body;
+        const newItem = await itemServices.addItem({
+          userID: userId || "101", // Default userId as requested
+          itemName: name,
+          description: description,
+          location: location,
+          amount: amount,
+          genre: Array.isArray(genre) ? genre.join(", ") : genre,
+          image: image
+        });
+        res.status(201).json(itemServices.mapItemToResponse(newItem));
+      } catch (err) {
+        res.status(400).json({ error: err.message });
+      }
+    });
+
+    app.delete("/items/:id", async (req, res) => {
+      try {
+        await itemServices.deleteItem(req.params.id);
         res.status(204).end();
       } catch (err) {
         res.status(400).json({ error: err.message });

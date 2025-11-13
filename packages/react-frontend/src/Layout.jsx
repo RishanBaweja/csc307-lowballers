@@ -78,6 +78,7 @@ export default function Layout() {
         <nav className={style.navlist}>
           <Link to="/">Home</Link>
           <Link to="/inbox"> Inbox</Link>
+          <Link to ="/items">Items</Link>
           <Link to="/profile">Profile</Link>
         </nav>
       </header>

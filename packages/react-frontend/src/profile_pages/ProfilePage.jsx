@@ -9,7 +9,7 @@ export default function ProfilePage() {
     <div className="profile-page">
       <ProfileHeader
         username="lowballer1"
-        info="Member since 6767 * 12 items posted"
+        info="Member since 6767 * 1 items posted"
       />
       <main className="items-list">
         <ItemCard name="Couch" info="old ahh couch" />

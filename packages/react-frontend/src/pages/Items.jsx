@@ -1,29 +1,54 @@
-import React, { useState } from "react";
-import AddingForm from "../AddingForm";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import ItemTable from "../ItemTable";
 
 function Items() {
   const [items, setItems] = useState([]);
+  const navigate = useNavigate();
 
-  function addItem(item) {
-    const newItem = {
-      ...item,
-      id: Date.now().toString(),
-    };
-    setItems([...items, newItem]);
+  // Fetch items from backend on component mount
+  useEffect(() => {
+    fetchItems();
+  }, []);
+
+  async function fetchItems() {
+    try {
+      const response = await fetch("http://localhost:8000/items");
+      if (response.ok) {
+        const data = await response.json();
+        setItems(data.items_list || []);
+      } else {
+        console.error("Failed to fetch items");
+      }
+    } catch (error) {
+      console.error("Error fetching items:", error);
+    }
   }
 
-  function removeItem(index) {
-    const updatedItems = items.filter((_, i) => i !== index);
-    setItems(updatedItems);
+  async function removeItem(index) {
+    const itemToDelete = items[index];
+    try {
+      const response = await fetch(`http://localhost:8000/items/${itemToDelete.id}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        const updatedItems = items.filter((_, i) => i !== index);
+        setItems(updatedItems);
+      } else {
+        console.error("Failed to delete item");
+        alert("Failed to delete item");
+      }
+    } catch (error) {
+      console.error("Error deleting item:", error);
+      alert("Error deleting item. Make sure the backend is running.");
+    }
   }
 
   return (
     <div className="items-page">
-      <h1>Add New Item</h1>
-      <AddingForm handleSubmit={addItem} />
-
-      <h2>Your Items</h2>
+      <h1>All Items</h1>
+      <button onClick={() => navigate("/add-item")}>Add New Item</button>
       <ItemTable items={items} removeItem={removeItem} />
     </div>
   );

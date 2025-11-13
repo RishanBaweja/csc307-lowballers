@@ -32,37 +32,37 @@ const UserSchema = new mongoose.Schema({
 const User = mongoose.model("User", UserSchema);
 
 const ItemSchema = new mongoose.Schema({
-  userID: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
-  itemName: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  description: {
-    type: String,
-    trim: true,
-  },
-  location: {
-    type: String,
-    trim: true,
-  },
-  amount: {
-    type: Number,
-    required: true,
-    min: 1,
-  },
-  genre: {
-    type: String,
-    trim: true,
-  },
-  image: {
-    type: String, // URL to the item image?
-    trim: true,
-  },
+    userID: {
+        type: Number, //mongoose.Schema.Types.ObjectId comment out for testing for now
+        ref: "User",
+        required: true
+    },
+    itemName: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    description: {
+        type: String,
+        trim: true,
+    },
+    location: {
+        type: String,
+        trim: true,
+    },
+    amount: {
+        type: Number,
+        required: true,
+        min: 1
+    },
+    genre: {
+        type: String,
+        trim: true,
+    },
+    image: {
+        type: String, // URL to the item image?
+        trim: true,
+    }
 });
 
 const Item = mongoose.model("Item", ItemSchema);
