@@ -7,9 +7,9 @@ import Layout from "./Layout.jsx";
 import Home from "./pages/Home.jsx";
 import Inbox from "./pages/Inbox.jsx";
 import Items from "./pages/Items.jsx";
-import {AuthProvider} from "./context/AuthContext.jsx";
+import ProfilePage from "./profile_pages/ProfilePage.jsx";
+import { AuthProvider } from "./context/AuthContext.jsx";
 import "./main.css";
-
 
 // If network connectivity issues, no defined route, user error, etc.
 function RouteError() {
@@ -48,6 +48,7 @@ const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: "inbox", element: <Inbox /> },
       { path: "items", element: <Items /> },
+      { path: "profile", element: <ProfilePage /> },
     ],
   },
 ]);

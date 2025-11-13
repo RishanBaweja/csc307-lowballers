@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom"; 
 import ProfileHeader from "./ProfileHeader";
 import ItemCard from "./ItemCard";
 import "./profile.css";
@@ -11,7 +12,7 @@ export default function ProfilePage() {
         info="Member since 6767 * 12 items posted"
       />
       <main className="items-list">
-      <ItemCard name="Couch" info="old ahh couch" />
+        <ItemCard name="Couch" info="old ahh couch" />
       </main>
     </div>
   );

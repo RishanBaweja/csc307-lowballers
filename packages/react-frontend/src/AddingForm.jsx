@@ -9,14 +9,14 @@ function AddingForm(props) {
     location: "",
     amount: 0,
     genre: [""],
-    image: ""
+    image: "",
   });
 
   function handleChange(event) {
     const { name, value } = event.target;
-    setItem((prevItem) => ({
+    setItem(prevItem => ({
       ...prevItem,
-      [name]: value
+      [name]: value,
     }));
   }
 
@@ -24,10 +24,10 @@ function AddingForm(props) {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (e) => {
-        setItem((prevItem) => ({
+      reader.onload = e => {
+        setItem(prevItem => ({
           ...prevItem,
-          image: e.target.result
+          image: e.target.result,
         }));
       };
       reader.readAsDataURL(file);
@@ -44,7 +44,7 @@ function AddingForm(props) {
       location: "",
       amount: 0,
       genre: [""],
-      image: ""
+      image: "",
     });
   }
 
@@ -70,16 +70,16 @@ function AddingForm(props) {
       {item.image && (
         <div style={{ marginTop: "10px" }}>
           <p>Image Preview:</p>
-          <img 
-            src={item.image} 
-            alt="Preview" 
-            style={{ 
-              maxWidth: "200px", 
-              maxHeight: "200px", 
+          <img
+            src={item.image}
+            alt="Preview"
+            style={{
+              maxWidth: "200px",
+              maxHeight: "200px",
               objectFit: "cover",
               border: "1px solid #ccc",
-              borderRadius: "4px"
-            }} 
+              borderRadius: "4px",
+            }}
           />
         </div>
       )}
@@ -107,8 +107,8 @@ function AddingForm(props) {
         name="amount"
         id="amount"
         value={item.amount}
-        min = {1}
-        max = {100}
+        min={1}
+        max={100}
         onChange={handleChange}
         required
       />
@@ -121,7 +121,7 @@ function AddingForm(props) {
         onChange={handleChange}
         required
       />
-      <input type="button" value="Submit" onClick={submitForm}/>
+      <input type="button" value="Submit" onClick={submitForm} />
     </form>
   );
 }

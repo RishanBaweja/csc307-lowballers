@@ -21,15 +21,15 @@ function ItemTableBody({ items, removeItem }) {
     <tr key={item.id || index}>
       <td>
         {item.image ? (
-          <img 
-            src={item.image} 
-            alt={item.name} 
-            style={{ 
-              width: "50px", 
-              height: "50px", 
+          <img
+            src={item.image}
+            alt={item.name}
+            style={{
+              width: "50px",
+              height: "50px",
               objectFit: "cover",
-              borderRadius: "4px"
-            }} 
+              borderRadius: "4px",
+            }}
           />
         ) : (
           <span>No image</span>
@@ -52,10 +52,7 @@ function ItemTable(props) {
   return (
     <table>
       <ItemTableHeader />
-      <ItemTableBody
-        items={props.items}
-        removeItem={props.removeItem}
-      />
+      <ItemTableBody items={props.items} removeItem={props.removeItem} />
     </table>
   );
 }
