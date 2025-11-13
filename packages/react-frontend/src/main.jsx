@@ -8,6 +8,7 @@ import Home from "./pages/Home.jsx";
 import Inbox from "./pages/Inbox.jsx";
 import Items from "./pages/Items.jsx";
 import {AuthProvider} from "./context/AuthContext.jsx";
+import AddItem from "./pages/AddItem.jsx";
 import "./main.css";
 
 
@@ -48,6 +49,7 @@ const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: "inbox", element: <Inbox /> },
       { path: "items", element: <Items /> },
+      { path: "add-item", element: <AddItem /> },
     ],
   },
 ]);
