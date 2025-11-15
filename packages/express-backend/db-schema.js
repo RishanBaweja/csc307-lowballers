@@ -126,11 +126,10 @@ ConversationSchema.index(
 
 const Conversation = mongoose.model("Conversation", ConversationsSchema);
 
-
 /* Messages represents individual messages sent in each conversation
-* Ex:
-** User 1 sends "Hello I am interested in this item" to User 2
-*/ 
+ *  Ex:
+ **  User 1 sends "Hello I am interested in this item" to User 2
+ */
 const MessageSchema = new mongoose.Schema({
   conversationId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -157,14 +156,4 @@ const MessageSchema = new mongoose.Schema({
 
 const Message = mongoose.model("Message", MessageSchema);
 
-const InboxSchema = new mongoose.Schema({
-  con: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Message",
-    required: true,
-  },
-});
-
-const Inbox = mongoose.model("Inbox", InboxSchema);
-
-export { User, Item, Catalog, Conversation, Message, Inbox };
+export { User, Item, Catalog, Conversation, Message };

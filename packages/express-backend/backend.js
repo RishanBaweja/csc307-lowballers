@@ -14,7 +14,6 @@ config({ path: "../../.env" });
 console.log("MONGO_URI loaded:", !!process.env.MONGO_URI);
 console.log("DB_NAME loaded:", !!process.env.DB_NAME);
 
-
 const app = express();
 const port = 8000;
 
