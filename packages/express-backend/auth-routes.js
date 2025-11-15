@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { User } from "./db-schema.js";
 
 const router = express.Router();
-const JWT_SECRET = process.env.JWT_SECRET || "lowballers_db_secret_key"
+const JWT_SECRET = process.env.JWT_SECRET || "lowballers_db_secret_key";
 
 // REGISTER
 router.post("/register", async (req, res) => {
