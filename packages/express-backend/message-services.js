@@ -41,6 +41,7 @@ async function sendMessage(myUserId, otherUserId, itemId, message) {
     ],
   }).lean();
 
+  // If the conversation does not exist, create it
   if (!conv) {
     //THIS NEEDS TO BE CHANGED. IT SHOULD BE A FUNCTION THAT RETURNS IF ITEM IS IN MY_USER CATALOG
     if (itemId in getItems()) {
@@ -48,7 +49,7 @@ async function sendMessage(myUserId, otherUserId, itemId, message) {
         itemId,
         buyerId: otherUserId,
         sellerId: myUserId,
-        lastMessageAt: new Date(),
+        lastMessageAt: new Date(), // should be Date.now automatically
       });
     } else {
       conv = await Conversation.create({
@@ -59,9 +60,27 @@ async function sendMessage(myUserId, otherUserId, itemId, message) {
       });
     }
   }
+  const msg = await Message.create({
+    conversationId: conv._id,
+    senderId: myUserId,
+    text: message,
+  });
 
-  const q = { conversationId: conv_.id };
-  return Message.find(q).sort({ createdAt: -1 }.lean());
+  await Converstaion.updateOne(
+    { _id: conv._id },
+    {
+      $set: {
+        lastMessage: {
+          id: msg._id,
+          senderId: myUserId,
+          preview: msg.text.slice(0, 15),
+          createdAt: msg.createdAt,
+        },
+        lastMessageAt: msg.createdAt,
+      },
+    }
+  );
+  return msg;
 }
 
-module.exports = { getInboxForUser, getMessagesForUser };
+module.exports = { getMessagesForUser, sendMessage };
