@@ -83,23 +83,23 @@ const CatalogSchema = new mongoose.Schema({
 const Catalog = mongoose.model("Catalog", CatalogSchema);
 
 /* Conversation represents the collection of messages between two users
-* Ex:
-** User 1 sends "Hello I am interested in this item" to User 2
-** User 2 sends back "Ok lets meet up!"
-*/ 
+ * Ex:
+ ** User 1 sends "Hello I am interested in this item" to User 2
+ ** User 2 sends back "Ok lets meet up!"
+ */
 
-const ConversationsSchema = new mongoose.Schema({
-  buyerID: {
+const ConversationSchema = new mongoose.Schema({
+  buyerId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
   },
-  sellerID: {
+  sellerId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
   },
-  itemID: {
+  itemId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Item",
     required: true,
@@ -124,7 +124,7 @@ ConversationSchema.index(
   { unique: true }
 );
 
-const Conversation = mongoose.model("Conversation", ConversationsSchema);
+const Conversation = mongoose.model("Conversation", ConversationSchema);
 
 /* Messages represents individual messages sent in each conversation
  *  Ex:

@@ -1,6 +1,5 @@
-import { getItems } from "./db-services";
-const { Conversation } = require("./db-schema");
-const { Message } = require("./db-schema");
+import items from "./db-services.js";
+import { Conversation, Message } from "./db-schema.js";
 
 /* Gets both buyer and seller conversations for the user
  * Means that it does not matter if a user is a buyer or seller,
@@ -10,7 +9,7 @@ async function getInboxForUser(userId) {
   const base = {
     $or: [{ buyerId: userId }, { sellerId: userId }],
   };
-  return Conversation.find(base).sort({ lastMessageAt: -1 }).limit(30);
+  return Conversation.find(base).sort({ lastMessageAt: -1 }).limit(30).lean();
 }
 
 /* Gets messages for user based on conversation params
@@ -33,6 +32,9 @@ async function getMessagesForUser(myUserId, otherUserId, itemId) {
 }
 
 async function sendMessage(myUserId, otherUserId, itemId, message) {
+  if (!message) {
+    throw new Error("You have to send something");
+  }
   let conv = await Conversation.findOne({
     itemId,
     $or: [
@@ -44,7 +46,7 @@ async function sendMessage(myUserId, otherUserId, itemId, message) {
   // If the conversation does not exist, create it
   if (!conv) {
     //THIS NEEDS TO BE CHANGED. IT SHOULD BE A FUNCTION THAT RETURNS IF ITEM IS IN MY_USER CATALOG
-    if (itemId in getItems()) {
+    if (itemId in items.getItems()) {
       conv = await Conversation.create({
         itemId,
         buyerId: otherUserId,
@@ -83,4 +85,4 @@ async function sendMessage(myUserId, otherUserId, itemId, message) {
   return msg;
 }
 
-module.exports = { getMessagesForUser, sendMessage };
+export default { getInboxForUser, getMessagesForUser, sendMessage };

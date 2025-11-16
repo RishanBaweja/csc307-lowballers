@@ -4,8 +4,10 @@ import mongoose from "mongoose";
 import { config } from "dotenv";
 import db from "./db-services.js";
 import itemServices from "./item-services.js";
+import messageServices from "./message-services.js";
 import authRoutes from "./auth-routes.js";
 import cookieParser from "cookie-parser";
+import { attachUserIfPresent, requireAuth } from "./auth-middleware.js";
 
 // Load .env from project root
 config({ path: "../../.env" });
@@ -19,7 +21,9 @@ const port = 8000;
 
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(express.json());
-app.use(cookieParser())
+app.use(cookieParser());
+app.use("/auth", authRoutes);
+app.use(attachUserIfPresent);
 
 mongoose.set("debug", true);
 
@@ -34,10 +38,9 @@ async function start() {
     app.get("/", (req, res) => {
       res.send("Hello world!");
     });
-    
+
     // Auth routes (for login, register, logout, verify)
     app.use("/auth", authRoutes);
-
 
     // User-related endpoints
     app.get("/users", async (req, res) => {
@@ -46,7 +49,7 @@ async function start() {
         const mapped = users.map(u => ({
           id: u._id,
           username: u.username,
-          password: u.password
+          password: u.password,
         }));
         res.status(200).json({ users_list: mapped });
       } catch (err) {
@@ -72,7 +75,10 @@ async function start() {
     app.post("/users", async (req, res) => {
       try {
         const { username, password } = req.body;
-        const newUser = await db.addUser({ username: username, password: password });
+        const newUser = await db.addUser({
+          username: username,
+          password: password,
+        });
         res.status(201).json({
           id: newUser._id,
           username: newUser.username,
@@ -116,7 +122,8 @@ async function start() {
 
     app.post("/items", async (req, res) => {
       try {
-        const { name, description, location, amount, genre, image, userId } = req.body;
+        const { name, description, location, amount, genre, image, userId } =
+          req.body;
         const newItem = await itemServices.addItem({
           userID: userId || "101", // Default userId as requested
           itemName: name,
@@ -124,7 +131,7 @@ async function start() {
           location: location,
           amount: amount,
           genre: Array.isArray(genre) ? genre.join(", ") : genre,
-          image: image
+          image: image,
         });
         res.status(201).json(itemServices.mapItemToResponse(newItem));
       } catch (err) {
@@ -141,14 +148,56 @@ async function start() {
       }
     });
 
+    // Endpoints for messaging
+
+    // Get conversations
+    app.get("/conversation", async (req, res) => {
+      try {
+        const conversations = await messageServices.getInboxForUser(
+          req.user._id
+        );
+        res.status(200).json(conversations);
+      } catch (err) {
+        res.status(404).json({ error: err.message });
+      }
+    });
+
+    // Get messages
+    app.get("/conversation/:conversationID/messages", async (req, res) => {
+      try {
+        const { conversationId } = req.params;
+        const messages = await messageServices.getMessagesForUser(
+          conversationId,
+          req.user._id
+        );
+        res.status(200).json(messages);
+      } catch (err) {
+        res.status(404).json({ error: err.message });
+      }
+    });
+
+    // Send a message
+    app.post("/conversation/:conversationId/messages", async (req, res) => {
+      try {
+        const { conversationId } = req.params;
+        const { text } = req.body;
+        const newMessage = await messageServices.sendMessage({
+          conversationId,
+          senderId: req.user._id,
+          text,
+        });
+        res.status(201).json(newMessage);
+      } catch (err) {
+        res.status(404).json({ error: err.message });
+      }
+    });
+
     app.listen(port, () => {
       console.log(`Example app listening at http://localhost:${port}`);
     });
-    } catch (err) {
-      console.error("Mongo connect failed:", err);
-      process.exit(1);
-    }
+  } catch (err) {
+    console.error("Mongo connect failed:", err);
+    process.exit(1);
+  }
 }
 start();
-
-

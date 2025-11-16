@@ -11,25 +11,34 @@ router.post("/register", async (req, res) => {
   try {
     const { username, password } = req.body;
     const existing = await User.findOne({ username });
-    if (existing) return res.status(400).json({ message: "Username already exists" });
+    if (existing)
+      return res.status(400).json({ message: "Username already exists" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await User.create({ username, password: hashedPassword });
 
     //Auto-login after registration (Had error before, fixed here)
-    const token = jwt.sign({ id: newUser._id, username: newUser.username }, JWT_SECRET, {
-      expiresIn: "1d",
-    });
+    const token = jwt.sign(
+      { id: newUser._id, username: newUser.username },
+      JWT_SECRET,
+      {
+        expiresIn: "1d",
+      }
+    );
 
     res.cookie("token", token, {
       httpOnly: true,
       secure: false, // set to true in production (HTTPS)
       sameSite: "lax",
     });
-    
-    res.status(201).json({ message: "User created successfully", user: newUser });
+
+    res
+      .status(201)
+      .json({ message: "User created successfully", user: newUser });
   } catch (error) {
-    res.status(500).json({ message: "Error creating user", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error creating user", error: error.message });
   }
 });
 
@@ -38,15 +47,21 @@ router.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
   const user = await User.findOne({ username });
-  if (!user) return res.status(400).json({ message: "Invalid username or password" });
+  if (!user)
+    return res.status(400).json({ message: "Invalid username or password" });
 
   const valid = await bcrypt.compare(password, user.password);
-  if (!valid) return res.status(400).json({ message: "Invalid username or password" });
+  if (!valid)
+    return res.status(400).json({ message: "Invalid username or password" });
 
   // Create token
-  const token = jwt.sign({ id: user._id, username: user.username }, JWT_SECRET, {
-    expiresIn: "1d",
-  });
+  const token = jwt.sign(
+    { id: user._id, username: user.username },
+    JWT_SECRET,
+    {
+      expiresIn: "1d",
+    }
+  );
 
   // Send as httpOnly cookie
   res.cookie("token", token, {
@@ -55,7 +70,10 @@ router.post("/login", async (req, res) => {
     sameSite: "lax",
   });
 
-  res.json({ message: "Login successful", user: { id: user._id, username: user.username } });
+  res.json({
+    message: "Login successful",
+    user: { id: user._id, username: user.username },
+  });
 });
 
 // LOGOUT
@@ -63,7 +81,6 @@ router.post("/logout", (req, res) => {
   res.clearCookie("token");
   res.json({ message: "Logged out" });
 });
-
 
 // VERIFY (check if user is still logged in)
 router.get("/verify", (req, res) => {
