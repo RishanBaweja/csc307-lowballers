@@ -16,59 +16,64 @@ async function getInboxForUser(userId) {
  * If there is no converation then do not display anything
  * then it returns all messages sorted by how early the conversation is
  */
-async function getMessagesForUser(myUserId, otherUserId, itemId) {
-  const conv = await Conversation.findOne({
-    itemId,
-    $or: [
-      { buyerId: myUserId, sellerId: otherUserId },
-      { buyerId: otherUserId, sellerId: myUserId },
-    ],
-  }).lean();
+async function getMessagesForUser(conversationId) {
+  const conv = await Conversation.findById(conversationId).lean();
 
   if (!conv) return [];
 
-  const q = { conversationId: conv_.id };
-  return Message.find(q).sort({ createdAt: -1 }.lean());
+  const q = { conversationId: conv._id };
+
+  return Message.find(q).sort({ createdAt: -1 }).lean(); // ← fix: .lean() is chained separately
 }
 
-async function sendMessage(myUserId, otherUserId, itemId, message) {
-  if (!message) {
+/* Sends messages for user based on conversation params
+ * If there is no converation then creates it
+ * and then sends the text
+ */
+async function sendMessage({ myUserId, otherUserId, itemId, text }) {
+  console.log("[sendMessage] args =", { myUserId, otherUserId, itemId, text });
+  // Error checking on text
+  if (!text || !text.trim()) {
     throw new Error("You have to send something");
   }
-  let conv = await Conversation.findOne({
-    itemId,
-    $or: [
-      { buyerId: myUserId, sellerId: otherUserId },
-      { buyerId: otherUserId, sellerId: myUserId },
-    ],
-  }).lean();
 
-  // If the conversation does not exist, create it
-  if (!conv) {
-    //THIS NEEDS TO BE CHANGED. IT SHOULD BE A FUNCTION THAT RETURNS IF ITEM IS IN MY_USER CATALOG
-    if (itemId in items.getItems()) {
-      conv = await Conversation.create({
+  // Error checking on items
+  const item = await items.findItemById(itemId);
+  if (!item) throw new Error("Item not found");
+
+  // CURRENTLY WE DO NOT HAVE USERS OWN ITEMS, THIS NEEDS TO CHANGE
+  // For whoever owns the item check
+  // const sellerId = item.userID.toString();
+  // const me = myUserId.toString();
+  // const other = otherUserId.toString();
+
+  // Whoever owns the item check
+  // const buyerId = me === sellerId ? other : me;
+
+  const buyerId = myUserId.toString();
+  const sellerId = otherUserId.toString();
+
+  let conv = await Conversation.findOneAndUpdate(
+    // These will need to get changed to buyerId and sellerId once items is updated
+    { itemId, buyerId, sellerId },
+    {
+      $setOnInsert: {
         itemId,
-        buyerId: otherUserId,
-        sellerId: myUserId,
-        lastMessageAt: new Date(), // should be Date.now automatically
-      });
-    } else {
-      conv = await Conversation.create({
-        itemId,
-        buyerId: myUserId,
-        sellerId: otherUserId,
-        lastMessageAt: new Date(), // should be Date.now automatically
-      });
-    }
-  }
+        buyerId,
+        sellerId,
+        lastMessageAt: new Date(0),
+      },
+    },
+    { upsert: true, new: true }
+  );
+
   const msg = await Message.create({
     conversationId: conv._id,
     senderId: myUserId,
-    text: message,
+    text: text.trim(),
   });
 
-  await Converstaion.updateOne(
+  await Conversation.updateOne(
     { _id: conv._id },
     {
       $set: {
@@ -82,7 +87,7 @@ async function sendMessage(myUserId, otherUserId, itemId, message) {
       },
     }
   );
-  return msg;
+  return { conversation: conv, message: msg };
 }
 
 export default { getInboxForUser, getMessagesForUser, sendMessage };

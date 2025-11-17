@@ -110,8 +110,15 @@ async function start() {
       }
     });
 
+    //ISSUE: "error": "Cast to ObjectId failed for value \"1\" (type number) at path \"_id\" for model \"User\""
+    //RUN TESTS ON THIS LATER
+    // http://localhost:8000/items/6913e0ae150080701a2af553
     app.get("/items/:id", async (req, res) => {
       try {
+        const { id } = req.params;
+        if (!mongoose.isValidObjectId(id)) {
+          return res.status(400).json({ error: "Invalid item id format" });
+        }
         const item = await itemServices.findItemById(req.params.id);
         if (!item) return res.status(404).json({ error: "Item not found" });
         res.status(200).json(itemServices.mapItemToResponse(item));
@@ -163,13 +170,11 @@ async function start() {
     });
 
     // Get messages
-    app.get("/conversation/:conversationID/messages", async (req, res) => {
+    app.get("/conversation/:conversationId/messages", async (req, res) => {
       try {
         const { conversationId } = req.params;
-        const messages = await messageServices.getMessagesForUser(
-          conversationId,
-          req.user._id
-        );
+        const messages =
+          await messageServices.getMessagesForUser(conversationId);
         res.status(200).json(messages);
       } catch (err) {
         res.status(404).json({ error: err.message });
@@ -177,18 +182,18 @@ async function start() {
     });
 
     // Send a message
-    app.post("/conversation/:conversationId/messages", async (req, res) => {
+    app.post("/conversation/sendMessage", async (req, res) => {
       try {
-        const { conversationId } = req.params;
-        const { text } = req.body;
-        const newMessage = await messageServices.sendMessage({
-          conversationId,
-          senderId: req.user._id,
+        const { otherUserId, itemId, text } = req.body;
+        const result = await messageServices.sendMessage({
+          myUserId: req.user._id,
+          otherUserId,
+          itemId,
           text,
         });
-        res.status(201).json(newMessage);
+        res.status(201).json(result);
       } catch (err) {
-        res.status(404).json({ error: err.message });
+        res.status(400).json({ error: err.message });
       }
     });
 

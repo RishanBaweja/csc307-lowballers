@@ -33,7 +33,7 @@ const User = mongoose.model("User", UserSchema);
 
 const ItemSchema = new mongoose.Schema({
   userID: {
-    type: Number, //mongoose.Schema.Types.ObjectId comment out for testing for now
+    type: mongoose.Schema.Types.ObjectId, //mongoose.Schema.Types.ObjectId comment out for testing for now
     ref: "User",
     required: true,
   },
