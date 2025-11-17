@@ -7,10 +7,9 @@ import Layout from "./Layout.jsx";
 import Home from "./pages/Home.jsx";
 import Inbox from "./pages/Inbox.jsx";
 import Items from "./pages/Items.jsx";
-import {AuthProvider} from "./context/AuthContext.jsx";
+import { AuthProvider } from "./context/AuthContext.jsx";
 import AddItem from "./pages/AddItem.jsx";
 import "./main.css";
-
 
 // If network connectivity issues, no defined route, user error, etc.
 function RouteError() {

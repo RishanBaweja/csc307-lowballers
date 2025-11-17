@@ -6,11 +6,7 @@ function ItemCard({ item, index, removeItem }) {
     <div className={styles.card}>
       <div className={styles.imageContainer}>
         {item.image ? (
-          <img 
-            src={item.image} 
-            alt={item.name} 
-            className={styles.image}
-          />
+          <img src={item.image} alt={item.name} className={styles.image} />
         ) : (
           <div className={styles.noImage}>No image</div>
         )}
@@ -25,7 +21,9 @@ function ItemCard({ item, index, removeItem }) {
           <div className={styles.tagsContainer}>
             {Array.isArray(item.genre) ? (
               item.genre.map((tag, idx) => (
-                <span key={idx} className={styles.tag}>{tag}</span>
+                <span key={idx} className={styles.tag}>
+                  {tag}
+                </span>
               ))
             ) : (
               <span className={styles.tag}>{item.genre}</span>
@@ -50,7 +48,7 @@ function ItemTable(props) {
     <div className={styles.wrapper}>
       <div className={styles.cardGrid}>
         {props.items.map((item, index) => (
-          <ItemCard 
+          <ItemCard
             key={item.id || index}
             item={item}
             index={index}

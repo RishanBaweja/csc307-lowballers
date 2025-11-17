@@ -28,9 +28,12 @@ function Items() {
   async function removeItem(index) {
     const itemToDelete = items[index];
     try {
-      const response = await fetch(`http://localhost:8000/items/${itemToDelete.id}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `http://localhost:8000/items/${itemToDelete.id}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       if (response.ok) {
         const updatedItems = items.filter((_, i) => i !== index);

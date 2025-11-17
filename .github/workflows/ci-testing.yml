@@ -24,14 +24,19 @@ jobs:
         run: npm ci
 
       # ---------- LINT ----------
+      - name: Auto-fix formatting
+        run: npm run -w express-backend lint:fix
+        
       - name: Lint backend
         run: npm run -w express-backend lint
+      
+      - name: Auto-fix formatting (frontend)
+        run: npm run -w react-frontend lint:fix
+
 
       - name: Lint frontend
         run: npm run -w react-frontend lint
       
-      - name: Auto-fix formatting
-        run: npm run -w express-backend lint:fix
 
       # ---------- BUILD ----------
       - name: Build frontend
