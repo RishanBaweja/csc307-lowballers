@@ -1,0 +1,43 @@
+name: CI Testing
+
+on:
+  push:
+    branches: ["ci/cd",  "main"]
+  pull_request:
+    branches: ["ci/cd","main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install workspace dependencies
+        run: npm ci
+
+      # ---------- LINT ----------
+      - name: Lint backend
+        run: npm run -w express-backend lint
+
+      - name: Lint frontend
+        run: npm run -w react-frontend lint
+
+      # ---------- BUILD ----------
+      - name: Build frontend
+        run: npm run -w react-frontend build
+
+      # ---------- TEST ----------
+      - name: Test backend
+        run: npm run -w express-backend test
+
+      # If you add frontend tests later, you can add:
+      # - name: Test frontend
+      #   run: npm run -w react-frontend test
