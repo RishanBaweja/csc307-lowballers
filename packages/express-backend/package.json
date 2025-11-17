@@ -8,6 +8,7 @@
   "main": "backend.js",
   "scripts": {
     "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "test": "echo \"No backend tests\"",
     "dev": "npx nodemon backend.js",
     "start": "node backend.js"
