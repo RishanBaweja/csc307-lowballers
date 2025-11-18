@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Table from "../Table.jsx";
 import Form from "../Form.jsx";
 import { useOutletContext } from "react-router-dom";
+import API_BASE from "../config.js";
 
 export default function Home() {
   const { characters, updateList, removeOneCharacter } = useOutletContext();
@@ -17,7 +18,7 @@ export default function Home() {
 
   async function handleSubmit() {
     const endpoint = isRegistering ? "register" : "login";
-    const response = await fetch(`http://localhost:8000/auth/${endpoint}`, {
+    const response = await fetch(`${API_BASE}/auth/${endpoint}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include", //allows for cookies to be passed
@@ -35,7 +36,7 @@ export default function Home() {
 
   //Automatically check if user is still logged in
   useEffect(() => {
-    fetch("http://localhost:8000/auth/verify", {
+    fetch(`${API_BASE}/auth/verify`, {
       credentials: "include",
     })
       .then(response => response.json())
@@ -81,7 +82,7 @@ export default function Home() {
       <h3>Welcome, {user.username}!</h3>
       <button
         onClick={async () => {
-          await fetch("http://localhost:8000/auth/logout", {
+          await fetch(`${API_BASE}/auth/logout`, {
             method: "POST",
             credentials: "include",
           });

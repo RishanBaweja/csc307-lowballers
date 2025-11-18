@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ItemTable from "../ItemTable";
+import API_BASE from "../config";
 
 function Items() {
   const [items, setItems] = useState([]);
@@ -13,7 +14,7 @@ function Items() {
 
   async function fetchItems() {
     try {
-      const response = await fetch("http://localhost:8000/items");
+      const response = await fetch(`${API_BASE}/items`);
       if (response.ok) {
         const data = await response.json();
         setItems(data.items_list || []);
@@ -29,7 +30,7 @@ function Items() {
     const itemToDelete = items[index];
     try {
       const response = await fetch(
-        `http://localhost:8000/items/${itemToDelete.id}`,
+        `${API_BASE}/items/${itemToDelete.id}`,
         {
           method: "DELETE",
         }
