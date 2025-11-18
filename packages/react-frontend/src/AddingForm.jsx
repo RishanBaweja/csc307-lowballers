@@ -4,8 +4,6 @@ import styles from "./addingform.module.css";
 
 function AddingForm(props) {
   const [item, setItem] = useState({
-    id: "",
-    userId: "",
     name: "",
     description: "",
     location: "",
@@ -39,8 +37,6 @@ function AddingForm(props) {
   function submitForm() {
     props.handleSubmit(item);
     setItem({
-      id: "",
-      userId: "",
       name: "",
       description: "",
       location: "",

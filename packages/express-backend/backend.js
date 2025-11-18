@@ -4,8 +4,10 @@ import mongoose from "mongoose";
 import { config } from "dotenv";
 import db from "./db-services.js";
 import itemServices from "./item-services.js";
+import messageServices from "./message-services.js";
 import authRoutes from "./auth-routes.js";
 import cookieParser from "cookie-parser";
+import { attachUserIfPresent, requireAuth } from "./auth-middleware.js";
 
 // Load .env from project root
 config({ path: "../../.env" });
@@ -14,14 +16,14 @@ config({ path: "../../.env" });
 console.log("MONGO_URI loaded:", !!process.env.MONGO_URI);
 console.log("DB_NAME loaded:", !!process.env.DB_NAME);
 
-
 const app = express();
 const port = 8000;
 
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(express.json());
-app.use(cookieParser())
-
+app.use(cookieParser());
+app.use("/auth", authRoutes);
+app.use(attachUserIfPresent);
 mongoose.set("debug", true);
 
 async function start() {
@@ -35,10 +37,9 @@ async function start() {
     app.get("/", (req, res) => {
       res.send("Hello world!");
     });
-    
+
     // Auth routes (for login, register, logout, verify)
     app.use("/auth", authRoutes);
-
 
     // User-related endpoints
     app.get("/users", async (req, res) => {
@@ -47,7 +48,7 @@ async function start() {
         const mapped = users.map(u => ({
           id: u._id,
           username: u.username,
-          password: u.password
+          password: u.password,
         }));
         res.status(200).json({ users_list: mapped });
       } catch (err) {
@@ -73,7 +74,10 @@ async function start() {
     app.post("/users", async (req, res) => {
       try {
         const { username, password } = req.body;
-        const newUser = await db.addUser({ username: username, password: password });
+        const newUser = await db.addUser({
+          username: username,
+          password: password,
+        });
         res.status(201).json({
           id: newUser._id,
           username: newUser.username,
@@ -105,8 +109,15 @@ async function start() {
       }
     });
 
+    //ISSUE: "error": "Cast to ObjectId failed for value \"1\" (type number) at path \"_id\" for model \"User\""
+    //RUN TESTS ON THIS LATER
+    // http://localhost:8000/items/6913e0ae150080701a2af553
     app.get("/items/:id", async (req, res) => {
       try {
+        const { id } = req.params;
+        if (!mongoose.isValidObjectId(id)) {
+          return res.status(400).json({ error: "Invalid item id format" });
+        }
         const item = await itemServices.findItemById(req.params.id);
         if (!item) return res.status(404).json({ error: "Item not found" });
         res.status(200).json(itemServices.mapItemToResponse(item));
@@ -117,15 +128,16 @@ async function start() {
 
     app.post("/items", async (req, res) => {
       try {
-        const { name, description, location, amount, genre, image, userId } = req.body;
+        const { name, description, location, amount, genre, image } =
+          req.body;
         const newItem = await itemServices.addItem({
-          userID: userId || "101", // Default userId as requested
+          userID: req.user?._id,
           itemName: name,
           description: description,
           location: location,
           amount: amount,
           genre: Array.isArray(genre) ? genre.join(", ") : genre,
-          image: image
+          image: image,
         });
         res.status(201).json(itemServices.mapItemToResponse(newItem));
       } catch (err) {
@@ -142,14 +154,54 @@ async function start() {
       }
     });
 
+    // Endpoints for messaging
+
+    // Get conversations
+    app.get("/conversation", async (req, res) => {
+      try {
+        const conversations = await messageServices.getInboxForUser(
+          req.user._id
+        );
+        res.status(200).json(conversations);
+      } catch (err) {
+        res.status(404).json({ error: err.message });
+      }
+    });
+
+    // Get messages
+    app.get("/conversation/:conversationId/messages", async (req, res) => {
+      try {
+        const { conversationId } = req.params;
+        const messages =
+          await messageServices.getMessagesForUser(conversationId);
+        res.status(200).json(messages);
+      } catch (err) {
+        res.status(404).json({ error: err.message });
+      }
+    });
+
+    // Send a message
+    app.post("/conversation/sendMessage", async (req, res) => {
+      try {
+        const { otherUserId, itemId, text } = req.body;
+        const result = await messageServices.sendMessage({
+          myUserId: req.user._id,
+          otherUserId,
+          itemId,
+          text,
+        });
+        res.status(201).json(result);
+      } catch (err) {
+        res.status(400).json({ error: err.message });
+      }
+    });
+
     app.listen(port, () => {
       console.log(`Example app listening at http://localhost:${port}`);
     });
-    } catch (err) {
-      console.error("Mongo connect failed:", err);
-      process.exit(1);
-    }
+  } catch (err) {
+    console.error("Mongo connect failed:", err);
+    process.exit(1);
+  }
 }
 start();
-
-
