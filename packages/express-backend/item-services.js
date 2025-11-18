@@ -5,7 +5,7 @@ function getItems() {
 }
 
 function findItemById(id) {
-  return Item.findById(id).populate('userID');
+  return Item.findById(id).populate("userID");
 }
 
 function addItem(item) {
@@ -28,7 +28,7 @@ function mapItemToResponse(item) {
     location: item.location,
     amount: item.amount,
     genre: item.genre,
-    image: item.image
+    image: item.image,
   };
 }
 

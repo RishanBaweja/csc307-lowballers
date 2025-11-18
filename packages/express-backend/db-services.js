@@ -1,4 +1,4 @@
-import { User, Item, Catalog, Message, Inbox } from "./db-schema.js";
+import { User, Item, Catalog, Message } from "./db-schema.js";
 
 //User-related DB functions
 
@@ -38,6 +38,17 @@ function deleteItem(id) {
   return Item.findByIdAndDelete(id);
 }
 
+//Conversation-related DB functions
+
+function addInboxEntry(data) {
+  const inboxEntryToAdd = new Inbox(data);
+  return inboxEntryToAdd.save();
+}
+
+function getInboxEntries() {
+  return Inbox.find().populate("messageID");
+}
+
 //Message-related DB functions
 
 function addMessage(data) {
@@ -58,17 +69,6 @@ function addCatalogEntry(data) {
 
 function getCatalogEntries() {
   return Catalog.find().populate(["itemID", "userID"]);
-}
-
-//Inbox-related DB functions
-
-function addInboxEntry(data) {
-  const inboxEntryToAdd = new Inbox(data);
-  return inboxEntryToAdd.save();
-}
-
-function getInboxEntries() {
-  return Inbox.find().populate("messageID");
 }
 
 export default {
