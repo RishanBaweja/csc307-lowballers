@@ -50,6 +50,9 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: backend-artifact
+          
+      - name: Zip backend for Azure
+        run: zip -r backend.zip .
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -65,4 +68,5 @@ jobs:
           app-name: 'Lowballers'
           slot-name: 'Production'
           package: .
+
 
