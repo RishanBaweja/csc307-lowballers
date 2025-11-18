@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AddingForm from "../AddingForm";
+import API_BASE from "../config";
 
 function AddItem() {
   const navigate = useNavigate();
 
   async function addItem(item) {
     try {
-      const response = await fetch("http://localhost:8000/items", {
+      const response = await fetch(`${API_BASE}/items`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

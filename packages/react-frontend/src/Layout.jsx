@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import style from "./navbar.module.css";
 import { Link, Outlet } from "react-router-dom";
+import API_BASE from "./config.js";
 
 export default function Layout() {
   /*
@@ -13,7 +14,7 @@ export default function Layout() {
   function removeOneCharacter(index) {
     const row = characters[index];
     const id = row._id ?? row.id;
-    const promise = fetch(`http://localhost:8000/users/${id}`, {
+    const promise = fetch(`${API_BASE}/users/${id}`, {
       method: "DELETE",
     }).then(res => {
       if (res.status === 204) {
@@ -29,7 +30,7 @@ export default function Layout() {
   }
 
   function fetchUsers() {
-    const promise = fetch("http://localhost:8000/users");
+    const promise = fetch(`${API_BASE}/users`);
     return promise;
   }
 
@@ -43,7 +44,7 @@ export default function Layout() {
   }, []);
 
   function postUser(person) {
-    return fetch("http://localhost:8000/users", {
+    return fetch(`${API_BASE}/users`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

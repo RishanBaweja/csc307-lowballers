@@ -17,12 +17,22 @@ console.log("MONGO_URI loaded:", !!process.env.MONGO_URI);
 console.log("DB_NAME loaded:", !!process.env.DB_NAME);
 
 const app = express();
-const port = 8000;
+const port = process.env.PORT || 8000;
 
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+// Config for both azure apps and local development
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "lowballers-efdua2e5h8fsg5bx.westus3-01.azurewebsites.net"
+    ],
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 app.use(cookieParser());
-app.use("/auth", authRoutes);
+app.use("/auth", authRoutes); // Auth routes (for login, register, logout, verify)
 app.use(attachUserIfPresent);
 
 mongoose.set("debug", true);
@@ -38,9 +48,6 @@ async function start() {
     app.get("/", (req, res) => {
       res.send("Hello world!");
     });
-
-    // Auth routes (for login, register, logout, verify)
-    app.use("/auth", authRoutes);
 
     // User-related endpoints
     app.get("/users", async (req, res) => {
