@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import styles from "./addingform.module.css";
 
@@ -11,14 +10,14 @@ function AddingForm(props) {
     location: "",
     amount: 0,
     genre: [""],
-    image: ""
+    image: "",
   });
 
   function handleChange(event) {
     const { name, value } = event.target;
-    setItem((prevItem) => ({
+    setItem(prevItem => ({
       ...prevItem,
-      [name]: value
+      [name]: value,
     }));
   }
 
@@ -26,10 +25,10 @@ function AddingForm(props) {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (e) => {
-        setItem((prevItem) => ({
+      reader.onload = e => {
+        setItem(prevItem => ({
           ...prevItem,
-          image: e.target.result
+          image: e.target.result,
         }));
       };
       reader.readAsDataURL(file);
@@ -46,7 +45,7 @@ function AddingForm(props) {
       location: "",
       amount: 0,
       genre: [""],
-      image: ""
+      image: "",
     });
   }
 
@@ -72,10 +71,7 @@ function AddingForm(props) {
       {item.image && (
         <div className={styles.imagePreview}>
           <p>Image Preview:</p>
-          <img 
-            src={item.image} 
-            alt="Preview" 
-          />
+          <img src={item.image} alt="Preview" />
         </div>
       )}
       <label htmlFor="description">description</label>
@@ -102,8 +98,8 @@ function AddingForm(props) {
         name="amount"
         id="amount"
         value={item.amount}
-        min = {1}
-        max = {100}
+        min={1}
+        max={100}
         onChange={handleChange}
         required
       />
@@ -116,7 +112,7 @@ function AddingForm(props) {
         onChange={handleChange}
         required
       />
-      <input type="button" value="Submit" onClick={submitForm}/>
+      <input type="button" value="Submit" onClick={submitForm} />
     </form>
   );
 }
