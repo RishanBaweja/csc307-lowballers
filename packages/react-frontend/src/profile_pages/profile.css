@@ -1,0 +1,94 @@
+/*--- Profile Header --- */
+.profile-header {
+  background-color: rgb(74, 72, 72);
+}
+.profile-topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* let the search take the left space */
+.searchabr {
+  flex: 1;
+  background-color: gainsboro;
+}
+
+/* This works because it pushes the "+" and then the inbox is after the "+"*/
+.add-item {
+  margin-left: auto;
+}
+
+/* Profile row */
+.profile-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.avatar-sm {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatar-lg {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.username {
+  border: 2px solid black;
+  padding: 10px;
+  background-color: gainsboro;
+  color: black;
+}
+
+.my-text {
+  color: black;
+}
+
+.info {
+  border: 2px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: gainsboro;
+  color: black;
+}
+
+.fix-background {
+  background-color: rgb(74, 72, 72);
+}
+/*--- Item Card --- */
+
+.item-list {
+  background-color: rgb(190, 187, 187);
+}
+
+.item-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.avatar-post {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.item-name {
+  border: 2px solid black;
+  margin: 0;
+  flex: 1;
+  padding: 6px;
+  background-color: gainsboro;
+}
+.more {
+  margin-left: auto;
+}
