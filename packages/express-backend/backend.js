@@ -14,13 +14,12 @@ config({ path: "../../.env" });
 console.log("MONGO_URI loaded:", !!process.env.MONGO_URI);
 console.log("DB_NAME loaded:", !!process.env.DB_NAME);
 
-
 const app = express();
 const port = 8000;
 
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(express.json());
-app.use(cookieParser())
+app.use(cookieParser());
 
 mongoose.set("debug", true);
 
@@ -35,10 +34,9 @@ async function start() {
     app.get("/", (req, res) => {
       res.send("Hello world!");
     });
-    
+
     // Auth routes (for login, register, logout, verify)
     app.use("/auth", authRoutes);
-
 
     // User-related endpoints
     app.get("/users", async (req, res) => {
@@ -47,7 +45,7 @@ async function start() {
         const mapped = users.map(u => ({
           id: u._id,
           username: u.username,
-          password: u.password
+          password: u.password,
         }));
         res.status(200).json({ users_list: mapped });
       } catch (err) {
@@ -73,7 +71,10 @@ async function start() {
     app.post("/users", async (req, res) => {
       try {
         const { username, password } = req.body;
-        const newUser = await db.addUser({ username: username, password: password });
+        const newUser = await db.addUser({
+          username: username,
+          password: password,
+        });
         res.status(201).json({
           id: newUser._id,
           username: newUser.username,
@@ -145,11 +146,9 @@ async function start() {
     app.listen(port, () => {
       console.log(`Example app listening at http://localhost:${port}`);
     });
-    } catch (err) {
-      console.error("Mongo connect failed:", err);
-      process.exit(1);
-    }
+  } catch (err) {
+    console.error("Mongo connect failed:", err);
+    process.exit(1);
+  }
 }
 start();
-
-

@@ -15,15 +15,15 @@ export default function Home() {
     setFormData(prev => ({ ...prev, [name]: value }));
   }
 
-  async function handleSubmit(){
+  async function handleSubmit() {
     const endpoint = isRegistering ? "register" : "login";
     const response = await fetch(`http://localhost:8000/auth/${endpoint}`, {
       method: "POST",
-      headers: {"Content-Type": "application/json"},
+      headers: { "Content-Type": "application/json" },
       credentials: "include", //allows for cookies to be passed
-      body: JSON.stringify(formData)
+      body: JSON.stringify(formData),
     });
-    
+
     const data = await response.json();
     if (response.ok) {
       setUser(data.user);
@@ -36,7 +36,7 @@ export default function Home() {
   //Automatically check if user is still logged in
   useEffect(() => {
     fetch("http://localhost:8000/auth/verify", {
-      credentials: "include"
+      credentials: "include",
     })
       .then(response => response.json())
       .then(data => {
@@ -50,22 +50,24 @@ export default function Home() {
   //IF Not logged in, show login/register form to the user
   if (!user) {
     return (
-      <div style ={{padding: "1rem"}}>
+      <div style={{ padding: "1rem" }}>
         <h2>{isRegistering ? "Register" : "Login"}</h2>
         <input
-          name = "username"
+          name="username"
           value={formData.username}
           onChange={handleChange}
           placeholder="Username"
         />
         <input
-          name = "password"
-          type = "password"
+          name="password"
+          type="password"
           value={formData.password}
           onChange={handleChange}
           placeholder="Password"
         />
-        <button onClick={handleSubmit}>{isRegistering ? "Register" : "Login"}</button>
+        <button onClick={handleSubmit}>
+          {isRegistering ? "Register" : "Login"}
+        </button>
         <button onClick={() => setIsRegistering(prev => !prev)}>
           {isRegistering ? "Switch to Login" : "Switch to Register"}
         </button>
@@ -75,13 +77,13 @@ export default function Home() {
 
   //If logged in, show the main app
   return (
-    <div className="container" style ={{padding: "1rem"}}>
+    <div className="container" style={{ padding: "1rem" }}>
       <h3>Welcome, {user.username}!</h3>
       <button
         onClick={async () => {
           await fetch("http://localhost:8000/auth/logout", {
             method: "POST",
-            credentials: "include"
+            credentials: "include",
           });
           setUser(null);
           localStorage.removeItem("user");

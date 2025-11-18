@@ -8,8 +8,10 @@ import Home from "./pages/Home.jsx";
 import Inbox from "./pages/Inbox.jsx";
 import Items from "./pages/Items.jsx";
 import {AuthProvider} from "./context/AuthContext.jsx";
-import AddItem from "./pages/AddItem.jsx";
 import "./main.css";
+import AddItem from "./pages/AddItem.jsx";
+
+import ProfilePage from "./profile_pages/ProfilePage.jsx";
 
 
 // If network connectivity issues, no defined route, user error, etc.
@@ -50,6 +52,7 @@ const router = createBrowserRouter([
       { path: "inbox", element: <Inbox /> },
       { path: "items", element: <Items /> },
       { path: "add-item", element: <AddItem /> },
+      { path: "profile", element: <ProfilePage /> },
     ],
   },
 ]);

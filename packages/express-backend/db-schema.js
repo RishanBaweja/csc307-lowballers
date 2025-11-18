@@ -1,32 +1,32 @@
 import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema({
-    username: {
-        type: String,
-        required: true,
-        trim: true,
-        unique: true
+  username: {
+    type: String,
+    required: true,
+    trim: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  profilePicture: {
+    type: String, // URL to the profile picture?
+    trim: true,
+  },
+  itemsListed: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Item",
     },
-    password: {
-        type: String,
-        required: true,
+  ],
+  itemsInterested: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Item",
     },
-    profilePicture: {
-        type: String, // URL to the profile picture?
-        trim: true,
-    },
-    itemsListed: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Item"
-        }
-    ],
-    itemsInterested: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Item"
-        }
-    ]
+  ],
 });
 
 const User = mongoose.model("User", UserSchema);
@@ -68,46 +68,46 @@ const ItemSchema = new mongoose.Schema({
 const Item = mongoose.model("Item", ItemSchema);
 
 const CatalogSchema = new mongoose.Schema({
-    itemID: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Item",
-        required: true
-    },
-    userID: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true
-    }
+  itemID: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Item",
+    required: true,
+  },
+  userID: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
 });
 
 const Catalog = mongoose.model("Catalog", CatalogSchema);
 
 const MessageSchema = new mongoose.Schema({
-    buyerID: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true
-    },
-    itemID: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Item",
-        required: true
-    },
-    text: {
-        type: String,
-        required: true,
-        trim: true,
-    }
+  buyerID: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  itemID: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Item",
+    required: true,
+  },
+  text: {
+    type: String,
+    required: true,
+    trim: true,
+  },
 });
 
 const Message = mongoose.model("Message", MessageSchema);
 
 const InboxSchema = new mongoose.Schema({
-    messageID: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Message",
-        required: true
-    }
+  messageID: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Message",
+    required: true,
+  },
 });
 
 const Inbox = mongoose.model("Inbox", InboxSchema);
