@@ -13,7 +13,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read #This is required for actions/checkout
+      contents: read
 
     steps:
       - uses: actions/checkout@v4
@@ -21,45 +21,40 @@ jobs:
       - name: Set up Node.js version
         uses: actions/setup-node@v3
         with:
-          node-version: '24.x'
+          node-version: '20.x'
 
+      # Install only backend dependencies
       - name: npm install, build, and test
         run: |
-          npm install
-          npm run build --if-present
-          npm run test --if-present
+          npm install --workspaces=false
+          npm run -w express-backend build --if-present
+          npm run -w express-backend test --if-present
+        working-directory: packages/express-backend
 
-      - name: Upload artifact for deployment job
+      # ⬅ FIXED: Upload ONLY the backend package folder
+      - name: Upload backend artifact
         uses: actions/upload-artifact@v4
         with:
-          name: node-app
-          path: .
+          name: backend-artifact
+          path: packages/express-backend
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
     permissions:
-      id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
+      id-token: write
+      contents: read
 
     steps:
-      - name: Download artifact from build job
+      # ⬅ FIXED: Download backend-only artifact
+      - name: Download backend artifact
         uses: actions/download-artifact@v4
         with:
-          name: node-app
-      
+          name: backend-artifact
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_A84F3571934D460DA7D51F43472C842D }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_92117624CC4F4B1EBDC6DCD21717354C }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_787C1EB24E6A43B2A3C9ACE089629FE3 }}
-
-      - name: 'Deploy to Azure Web App'
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: 'Lowballers'
-          slot-name: 'Production'
-          package: .
-          
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_787C1EB24E6A43
