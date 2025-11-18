@@ -79,6 +79,7 @@ export default function Layout() {
           <Link to="/">Home</Link>
           <Link to="/inbox"> Inbox</Link>
           <Link to ="/items">Items</Link>
+          <Link to="/profile">Profile</Link>
         </nav>
       </header>
       <main className={style.content}>

@@ -12,7 +12,6 @@ function Form(props) {
     setPerson(prev => ({ ...prev, [name]: value }));
   }
 
-
   function submitForm() {
     props.handleSubmit(person);
     setPerson({ username: "", password: "" });
