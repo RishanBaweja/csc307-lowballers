@@ -67,6 +67,7 @@ jobs:
         with:
           app-name: 'Lowballers'
           slot-name: 'Production'
-          package: .
+          package: backend.zip
+
 
 
