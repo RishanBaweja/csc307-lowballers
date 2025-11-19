@@ -31,14 +31,34 @@ jobs:
           path: packages/express-backend
 
   deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    permissions:
-      id-token: write
-      contents: read
-
-    steps:
-      - name: Download backend artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: backend-artifact   # <--- MATCHES build job
+      runs-on: ubuntu-latest
+      needs: build
+      permissions:
+        id-token: write
+        contents: read
+  
+      steps:
+        - name: Download backend artifact
+          uses: actions/download-artifact@v4
+          with:
+            name: backend-artifact
+  
+        - name: List downloaded artifact contents
+          run: ls -R .
+  
+        - name: Zip backend for Azure
+          run: zip -r backend.zip .
+  
+        - name: Login to Azure
+          uses: azure/login@v2
+          with:
+            client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_A84F3571934D460DA7D51F43472C842D }}
+            tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_92117624CC4F4B1EBDC6DCD21717354C }}
+            subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_787C1EB24E6A43FE3C9ACE089629FE3 }}
+  
+        - name: Deploy to Azure Web App
+          uses: azure/webapps-deploy@v3
+          with:
+            app-name: 'Lowballers'
+            slot-name: 'Production'
+            package: backend.zip
