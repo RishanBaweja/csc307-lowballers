@@ -42,7 +42,7 @@ jobs:
         with:
           name: backend-artifact
   
-      - name: Debug: List downloaded artifact
+      - name: List downloaded artifact
         run: ls -R .
   
       - name: Zip backend for Azure
@@ -61,3 +61,4 @@ jobs:
           app-name: 'Lowballers'
           slot-name: 'Production'
           package: backend.zip
+
