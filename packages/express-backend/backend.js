@@ -24,7 +24,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "lowballers-efdua2e5h8fsg5bx.westus3-01.azurewebsites.net"
+      "https://lowballers-efdua2e5h8fsg5bx.westus3-01.azurewebsites.net"
     ],
     credentials: true,
   })
