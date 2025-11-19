@@ -28,8 +28,8 @@ router.post("/register", async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false, // set to true in production (HTTPS)
-      sameSite: "lax",
+      secure: true, // set to true in production (HTTPS)
+      sameSite: "None",
     });
 
     res
