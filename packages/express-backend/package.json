@@ -19,7 +19,7 @@
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "mongoose": "^8.19.2",
-    "cookie_parser": "^1.4.7"
+    "cookie-parser": "^1.4.7"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
