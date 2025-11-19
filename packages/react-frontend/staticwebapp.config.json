@@ -1,0 +1,14 @@
+{
+  "globalHeaders": {
+    "Access-Control-Allow-Origin": "https://green-flower-09638de1e.3.azurestaticapps.net",
+    "Access-Control-Allow-Credentials": "true",
+    "Access-Control-Allow-Headers": "*",
+    "Access-Control-Allow-Methods": "*"
+  },
+  "routes": [
+    {
+      "route": "/*",
+      "allowedRoles": ["anonymous"]
+    }
+  ]
+}
