@@ -13,10 +13,8 @@ function AddItem() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          ...item,
-          userId: 1,
-        }),
+        body: JSON.stringify(item),
+        credentials: "include",
       });
 
       if (response.ok) {

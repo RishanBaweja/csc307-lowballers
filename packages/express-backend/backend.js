@@ -137,10 +137,10 @@ async function start() {
 
     app.post("/items", async (req, res) => {
       try {
-        const { name, description, location, amount, genre, image, userId } =
+        const { name, description, location, amount, genre, image } =
           req.body;
         const newItem = await itemServices.addItem({
-          userID: userId || "101", // Default userId as requested
+          userID: req.user?._id,
           itemName: name,
           description: description,
           location: location,
