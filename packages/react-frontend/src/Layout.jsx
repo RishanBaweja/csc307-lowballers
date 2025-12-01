@@ -83,7 +83,7 @@ export default function Layout() {
           <Link to="/profile">Profile</Link>
         </nav>
       </header>
-      <main className={style.content}>
+      <main className={style.content + " full-container"}>
         <Outlet context={{ characters, updateList, removeOneCharacter }} />
       </main>
     </div>
