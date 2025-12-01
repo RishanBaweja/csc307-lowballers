@@ -10,7 +10,6 @@ import Items from "./pages/Items.jsx";
 import {AuthProvider} from "./context/AuthContext.jsx";
 import "./main.css";
 import AddItem from "./pages/AddItem.jsx";
-
 import ProfilePage from "./profile_pages/ProfilePage.jsx";
 
 

@@ -6,11 +6,11 @@ export default function ProfileHeader({ username, info }) {
 
         <button className="add-item">+</button>
         <button className="inbox">Inbox</button>
-        <img src="./example.png" alt="Your Profile" className="avatar-sm" />
+        <img src="./simplePFP.jpg" alt="Your Profile" className="avatar-sm" />
       </div>
 
       <div className="profile-row">
-        <img src="./example.png" alt="PFP" className="avatar-lg" />
+        <img src="./simplePFP.jpg" alt="PFP" className="avatar-lg" />
         <div className="username">{username}</div>
       </div>
 

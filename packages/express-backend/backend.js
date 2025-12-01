@@ -205,6 +205,33 @@ async function start() {
       }
     });
 
+    app.get("/me", requireAuth, async (req, res) => {
+      try {
+        const userId = req.user._id;
+
+        // 1. Fetch the user from DB
+        const user = await db.findUserById(userId);
+        if (!user) {
+          return res.status(404).json({ error: "User not found" });
+        }
+
+        // 2. Fetch that user's items
+        const items = await itemServices.getItemsByUserId(userId);
+        const mappedItems = items.map(itemServices.mapItemToResponse);
+
+        // 3. Return a clean profile object
+        res.status(200).json({
+          id: user._id,
+          username: user.username,
+          profilePicture: user.profilePicture,
+          itemsListed: mappedItems,
+        });
+      } catch (err) {
+        console.error("Error fetching /me:", err);
+        res.status(500).json({ error: err.message });
+      }
+    });
+
     app.listen(port, () => {
       console.log(`Example app listening at http://localhost:${port}`);
     });
