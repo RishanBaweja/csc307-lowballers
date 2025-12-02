@@ -6,6 +6,15 @@ import { User } from "./db-schema.js";
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || "lowballers_db_secret_key";
 
+const isProd = process.env.NODE_ENV === "production";
+
+const cookieOptions = {
+  httpOnly: true,
+  secure: isProd, // set to true in production (HTTPS)
+  sameSite: isProd ? "None" : "Lax",
+  maxAge:  24 * 60 * 60 * 1000, // 1 day
+};
+
 // REGISTER
 router.post("/register", async (req, res) => {
   try {
@@ -26,11 +35,7 @@ router.post("/register", async (req, res) => {
       }
     );
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: true, // set to true in production (HTTPS)
-      sameSite: "None",
-    });
+    res.cookie("token", token, cookieOptions);
 
     res
       .status(201)
@@ -64,12 +69,8 @@ router.post("/login", async (req, res) => {
   );
 
   // Send as httpOnly cookie
-  res.cookie("token", token, {
-    httpOnly: true,
-    secure: false, // change to true for HTTPS
-    sameSite: "lax",
-  });
-
+  res.cookie("token", token, cookieOptions);
+  
   res.json({
     message: "Login successful",
     user: { id: user._id, username: user.username },
