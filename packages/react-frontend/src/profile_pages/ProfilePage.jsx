@@ -84,7 +84,7 @@ export default function ProfilePage() {
               name={item.name || item.itemName}
               info={item.description}
               image={item.image}
-              profilePicture={profile.profilePicture}
+              profilePicture={avatarSrc}
             />
           ))
         ) : (
