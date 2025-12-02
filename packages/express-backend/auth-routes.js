@@ -6,21 +6,14 @@ import { User } from "./db-schema.js";
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || "lowballers_db_secret_key";
 
-const isDeployed = process.env.IS_DEPLOYED === "true";
+const isLocal = process.env.NODE_ENV !== "production";
 
-const cookieOptions = isDeployed
-  ? {
-      httpOnly: true,
-      secure: true,
-      sameSite: "None",
-      maxAge: 24 * 60 * 60 * 1000,
-    }
-  : {
-      httpOnly: true,
-      secure: false,
-      sameSite: "Lax",
-      maxAge: 24 * 60 * 60 * 1000,
-    };
+const cookieOptions = {
+  httpOnly: true,
+  secure: !isLocal,                
+  sameSite: !isLocal ? "None" : "Lax",
+  maxAge: 24 * 60 * 60 * 1000,
+};
 
 // REGISTER
 router.post("/register", async (req, res) => {
@@ -33,13 +26,10 @@ router.post("/register", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await User.create({ username, password: hashedPassword });
 
-    //Auto-login after registration (Had error before, fixed here)
     const token = jwt.sign(
       { id: newUser._id, username: newUser.username },
       JWT_SECRET,
-      {
-        expiresIn: "1d",
-      }
+      { expiresIn: "1d" }
     );
 
     res.cookie("token", token, cookieOptions);
@@ -66,16 +56,12 @@ router.post("/login", async (req, res) => {
   if (!valid)
     return res.status(400).json({ message: "Invalid username or password" });
 
-  // Create token
   const token = jwt.sign(
     { id: user._id, username: user.username },
     JWT_SECRET,
-    {
-      expiresIn: "1d",
-    }
+    { expiresIn: "1d" }
   );
 
-  // Send as httpOnly cookie
   res.cookie("token", token, cookieOptions);
 
   res.json({
@@ -84,13 +70,13 @@ router.post("/login", async (req, res) => {
   });
 });
 
-// LOGOUT
+// LOGOUT – clear with same options so prod cookies actually clear
 router.post("/logout", (req, res) => {
-  res.clearCookie("token");
+  res.clearCookie("token", cookieOptions);
   res.json({ message: "Logged out" });
 });
 
-// VERIFY (check if user is still logged in)
+// VERIFY
 router.get("/verify", (req, res) => {
   const token = req.cookies.token;
   if (!token) return res.status(401).json({ loggedIn: false });
