@@ -38,16 +38,6 @@ function deleteItem(id) {
   return Item.findByIdAndDelete(id);
 }
 
-//Conversation-related DB functions
-
-function addInboxEntry(data) {
-  const inboxEntryToAdd = new Inbox(data);
-  return inboxEntryToAdd.save();
-}
-
-function getInboxEntries() {
-  return Inbox.find().populate("messageID");
-}
 
 //Message-related DB functions
 
@@ -87,8 +77,5 @@ export default {
   getMessages,
   // Catalog functions
   addCatalogEntry,
-  getCatalogEntries,
-  // Inbox functions
-  addInboxEntry,
-  getInboxEntries,
+  getCatalogEntries
 };
