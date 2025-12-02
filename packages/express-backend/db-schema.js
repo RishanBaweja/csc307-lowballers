@@ -11,6 +11,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  displayName: {
+    type: String,
+    trim: true,
+  },
   profilePicture: {
     type: String,
     trim: true,

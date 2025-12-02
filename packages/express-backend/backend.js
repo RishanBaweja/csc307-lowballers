@@ -254,6 +254,7 @@ async function start() {
         res.status(200).json({
           id: user._id,
           username: user.username,
+          displayName: user.displayName,
           bio: user.bio || "",
           profilePicture: user.profilePicture,
           itemsListed: mappedItems,
@@ -267,10 +268,11 @@ async function start() {
     app.patch("/me", requireAuth, async (req, res) => {
       try {
         const userId = req.user._id;
-        const { username, bio, profilePicture } = req.body;
+        const { username, displayName, bio, profilePicture } = req.body;
 
         const updates = {};
         if (username !== undefined) updates.username = username;
+        if (displayName !== undefined) updates.displayName = displayName;
         if (bio !== undefined) updates.bio = bio;
         if (profilePicture !== undefined) updates.profilePicture = profilePicture;
 
@@ -289,6 +291,7 @@ async function start() {
         res.status(200).json({
           id: updatedUser._id,
           username: updatedUser.username,
+          displayName: updatedUser.displayName,
           bio: updatedUser.bio || "",
           profilePicture: updatedUser.profilePicture,
           itemsListed: mappedItems,
