@@ -22,6 +22,7 @@
    - Node.js (LTS, e.g. v18+; includes npm)
    - MongoDB (local server or Atlas cluster)
    - A code editor (VS Code recommended)
+
 *Setup*
  - Clone this repository to your machine.
  - Configure .env file (Example below)
