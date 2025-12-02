@@ -15,6 +15,24 @@
 ## UI Prototype (Last modified 10/30)
 - https://www.figma.com/design/z7bFkwgJs3Sz1fpo6f3fTb/Schematic?node-id=0-1&t=MuqgWuLVq0VVcU8E-1
 
+## Developer Setup
+*Prerequisites*
+ - Install the following tools on your machine:
+   - Git
+   - Node.js (LTS, e.g. v18+; includes npm)
+   - MongoDB (local server or Atlas cluster)
+   - A code editor (VS Code recommended)
+*Setup*
+ - Clone this repository to your machine.
+ - Configure .env file (Example below)
+   - MONGO_URI: <Include connecting link to MongoDB atlas, ensure whitelist is enabled for IP> (Link not included for security reasons)
+   - DB_NAME: "lowballers_db"
+   - NODE_ENV=development (This is used for swapping specific logic like cookies on prod/development.)
+   - PORT=8000
+ - Run npm install on each workspace. (i.e. ./packages/express-backend and ./packages/react-frontend)
+ - To run locally, first execute "npm run dev" in express-backend, and then in react-frontend, following the provided localhost link to the deployed website. 
+
+
 
 
 # Contributing:
