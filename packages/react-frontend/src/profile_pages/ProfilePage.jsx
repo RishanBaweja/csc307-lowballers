@@ -3,9 +3,7 @@ import ProfileHeader from "./ProfileHeader";
 import ItemCard from "./ItemCard";
 import "./profile.css";
 import { useNavigate } from "react-router-dom";
-
-const API_BASE_URL =
-  import.meta.env.VITE_API_URL || "http://localhost:8000";
+import API_BASE from "../config.js";
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState(null);
@@ -20,7 +18,7 @@ export default function ProfilePage() {
         setLoading(true);
         setError(null);
 
-        const res = await fetch(`${API_BASE_URL}/me`, {
+        const res = await fetch(`${API_BASE}/me`, {
           method: "GET",
           credentials: "include", // sends auth cookie
         });
@@ -61,7 +59,7 @@ export default function ProfilePage() {
   const itemsCount = items.length;
 
   const avatarSrc = profile.profilePicture
-    ? `${API_BASE_URL}${profile.profilePicture}`
+    ? `${API_BASE}${profile.profilePicture}`
     : "./simplePFP.jpg";
 
   return (
