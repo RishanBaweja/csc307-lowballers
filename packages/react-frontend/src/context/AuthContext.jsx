@@ -1,4 +1,7 @@
 import { createContext, useState, useEffect } from "react";
+import API_BASE from "../config.js"
+
+console.log("API_BASE at runtime:", API_BASE);  // <-- add this
 
 export const AuthContext = createContext();
 
@@ -6,9 +9,10 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(() =>
     JSON.parse(localStorage.getItem("user"))
   );
+  const [authChecked, setAuthChecked] = useState(false); //Avoid flicker
 
   useEffect(() => {
-    fetch("http://localhost:8000/auth/verify", { credentials: "include" })
+    fetch(`${API_BASE}/auth/verify`, { credentials: "include" })
       .then(res => res.json())
       .then(data => {
         if (data.loggedIn) {
@@ -18,11 +22,16 @@ export function AuthProvider({ children }) {
           setUser(null);
           localStorage.removeItem("user");
         }
-      });
+      })
+      .catch(() => {
+        setUser(null);
+        localStorage.removeItem("user");
+      })
+      .finally(() => setAuthChecked(true));
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider value={{ user, setUser, authChecked }}>
       {children}
     </AuthContext.Provider>
   );
