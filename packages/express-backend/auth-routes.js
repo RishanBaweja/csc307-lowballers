@@ -6,14 +6,25 @@ import { User } from "./db-schema.js";
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || "lowballers_db_secret_key";
 
+const isDeployed = process.env.IS_DEPLOYED === "true";
+console.log("IS_DEPLOYED =", process.env.IS_DEPLOYED); // shows in Azure logs
+
 const isLocal = process.env.NODE_ENV !== "production";
 
-const cookieOptions = {
-  httpOnly: true,
-  secure: !isLocal,                
-  sameSite: !isLocal ? "None" : "Lax",
-  maxAge: 24 * 60 * 60 * 1000,
-};
+
+const cookieOptions = isDeployed
+  ? {
+      httpOnly: true,
+      secure: true,      // required for SameSite=None to work
+      sameSite: "None",  // required for cross-site (static app -> backend)
+      maxAge: 24 * 60 * 60 * 1000,
+    }
+  : {
+      httpOnly: true,
+      secure: false,     // fine for http://localhost
+      sameSite: "Lax",
+      maxAge: 24 * 60 * 60 * 1000,
+    };
 
 // REGISTER
 router.post("/register", async (req, res) => {
