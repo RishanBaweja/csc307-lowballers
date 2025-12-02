@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import style from "./navbar.module.css";
 import { Link, Outlet } from "react-router-dom";
 import API_BASE from "./config.js";
+import { AuthContext } from "./context/AuthContext.jsx";
+import LoginModal from "./LoginModal.jsx";
 
 export default function Layout() {
   /*
@@ -10,6 +12,7 @@ export default function Layout() {
    *
    */
   const [characters, setCharacters] = useState([]);
+  const { user, authChecked } = useContext(AuthContext);
 
   function removeOneCharacter(index) {
     const row = characters[index];
@@ -86,6 +89,8 @@ export default function Layout() {
       <main className={style.content}>
         <Outlet context={{ characters, updateList, removeOneCharacter }} />
       </main>
+      {/* Once auth check is done, if there's no user, show global login modal */}
+      {authChecked && !user && <LoginModal />}
     </div>
   );
 }

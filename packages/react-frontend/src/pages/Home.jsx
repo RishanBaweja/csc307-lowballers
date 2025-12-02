@@ -1,99 +1,79 @@
-import React, { useState, useEffect } from "react";
-import Table from "../Table.jsx";
-import Form from "../Form.jsx";
-import { useOutletContext } from "react-router-dom";
+// src/pages/Home.jsx
+import React, { useContext } from "react";
+import { useOutletContext, useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext.jsx";
 import API_BASE from "../config.js";
 
 export default function Home() {
+  // You’re still getting these from Layout via Outlet,
+  // but we no longer need to display the list of users here.
   const { characters, updateList, removeOneCharacter } = useOutletContext();
+  const { user, setUser } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-  const [user, setUser] = useState(null);
-  const [formData, setFormData] = useState({ username: "", password: "" });
-  const [isRegistering, setIsRegistering] = useState(false);
-
-  function handleChange(e) {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  }
-
-  async function handleSubmit() {
-    const endpoint = isRegistering ? "register" : "login";
-    const response = await fetch(`${API_BASE}/auth/${endpoint}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include", //allows for cookies to be passed
-      body: JSON.stringify(formData),
-    });
-
-    const data = await response.json();
-    if (response.ok) {
-      setUser(data.user);
-      localStorage.setItem("user", JSON.stringify(data.user));
-    } else {
-      alert(data.message || "An error occurred");
-    }
-  }
-
-  //Automatically check if user is still logged in
-  useEffect(() => {
-    fetch(`${API_BASE}/auth/verify`, {
-      credentials: "include",
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data.loggedIn) {
-          setUser(data.user);
-          localStorage.setItem("user", JSON.stringify(data.user));
-        }
-      });
-  }, []);
-
-  //IF Not logged in, show login/register form to the user
   if (!user) {
+    // Global LoginModal is already showing if not logged in,
+    // so just keep the page content simple.
     return (
       <div style={{ padding: "1rem" }}>
-        <h2>{isRegistering ? "Register" : "Login"}</h2>
-        <input
-          name="username"
-          value={formData.username}
-          onChange={handleChange}
-          placeholder="Username"
-        />
-        <input
-          name="password"
-          type="password"
-          value={formData.password}
-          onChange={handleChange}
-          placeholder="Password"
-        />
-        <button onClick={handleSubmit}>
-          {isRegistering ? "Register" : "Login"}
-        </button>
-        <button onClick={() => setIsRegistering(prev => !prev)}>
-          {isRegistering ? "Switch to Login" : "Switch to Register"}
-        </button>
+        <h2>Welcome to Lowballers</h2>
+        <p>Please log in or create an account to start sharing items.</p>
       </div>
     );
   }
 
-  //If logged in, show the main app
+  async function handleLogout() {
+    try {
+      await fetch(`${API_BASE}/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch (err) {
+      console.error("Error logging out:", err);
+    } finally {
+      setUser(null);
+      localStorage.removeItem("user");
+    }
+  }
+
   return (
     <div className="container" style={{ padding: "1rem" }}>
-      <h3>Welcome, {user.username}!</h3>
-      <button
-        onClick={async () => {
-          await fetch(`${API_BASE}/auth/logout`, {
-            method: "POST",
-            credentials: "include",
-          });
-          setUser(null);
-          localStorage.removeItem("user");
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "1rem",
         }}
       >
-        Logout
-      </button>
-      <h4>All Users</h4>
-      <Table characterData={characters} removeCharacter={removeOneCharacter} />
+        <h3>Welcome, {user.username}!</h3>
+        <button onClick={handleLogout}>Logout</button>
+      </div>
+
+      <section style={{ marginBottom: "1.5rem" }}>
+        <h2>What is Lowballers?</h2>
+        <p style={{ maxWidth: "600px" }}>
+          Lowballers is a community-driven platform for exchanging free items. 
+          Users can post items they no longer need, browse listings from others, 
+          and coordinate pick-ups through built-in messaging — no money involved, 
+          just giving things a second life.
+        </p>
+      </section>
+
+      <section>
+        <h3>What you can do</h3>
+        <ul>
+          <li>Browse all available free items.</li>
+          <li>List your own items for others to claim.</li>
+          <li>Message other users to arrange pick-ups.</li>
+        </ul>
+
+        <div style={{ marginTop: "1rem", display: "flex", gap: "0.5rem" }}>
+          <button onClick={() => navigate("/items")}>View Items</button>
+          <button onClick={() => navigate("/add-item")}>Add an Item</button>
+          <button onClick={() => navigate("/inbox")}>Go to Inbox</button>
+        </div>
+      </section>
     </div>
   );
 }
