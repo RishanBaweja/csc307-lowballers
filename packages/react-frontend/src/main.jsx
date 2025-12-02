@@ -10,9 +10,8 @@ import Items from "./pages/Items.jsx";
 import {AuthProvider} from "./context/AuthContext.jsx";
 import "./main.css";
 import AddItem from "./pages/AddItem.jsx";
-import ProfilePage from "./profile_pages/ProfilePage.jsx";
-import EditProfilePage from "./profile_pages/EditProfilePage.jsx";
 
+import ProfilePage from "./profile_pages/ProfilePage.jsx";
 
 
 // If network connectivity issues, no defined route, user error, etc.
@@ -54,7 +53,6 @@ const router = createBrowserRouter([
       { path: "items", element: <Items /> },
       { path: "add-item", element: <AddItem /> },
       { path: "profile", element: <ProfilePage /> },
-      { path: "profile/edit", element: <EditProfilePage /> },
     ],
   },
 ]);
