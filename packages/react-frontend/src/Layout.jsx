@@ -86,7 +86,7 @@ export default function Layout() {
           <Link to="/profile">Profile</Link>
         </nav>
       </header>
-      <main className={style.content + " full-container"}>
+      <main className={style.content}>
         <Outlet context={{ characters, updateList, removeOneCharacter }} />
       </main>
       {/* Once auth check is done, if there's no user, show global login modal */}
