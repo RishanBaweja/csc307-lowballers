@@ -1,6 +1,8 @@
 import { createContext, useState, useEffect } from "react";
 import API_BASE from "../config.js"
 
+console.log("API_BASE at runtime:", API_BASE);  // <-- add this
+
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {

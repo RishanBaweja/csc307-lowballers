@@ -6,14 +6,21 @@ import { User } from "./db-schema.js";
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || "lowballers_db_secret_key";
 
-const isProd = process.env.NODE_ENV === "production";
+const isDeployed = process.env.IS_DEPLOYED === "true";
 
-const cookieOptions = {
-  httpOnly: true,
-  secure: isProd, // set to true in production (HTTPS)
-  sameSite: "None",
-  maxAge:  24 * 60 * 60 * 1000, // 1 day
-};
+const cookieOptions = isDeployed
+  ? {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+      maxAge: 24 * 60 * 60 * 1000,
+    }
+  : {
+      httpOnly: true,
+      secure: false,
+      sameSite: "Lax",
+      maxAge: 24 * 60 * 60 * 1000,
+    };
 
 // REGISTER
 router.post("/register", async (req, res) => {
