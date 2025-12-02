@@ -10,7 +10,7 @@
 
 ## Product Vision
 
-**For** home owners **Who** are those looking to get rid of their household items that clutter their space, **The** Lowballers **is a** web application **That** lists items that they no longer use to be given away for free. **Unlike** Facebook Marketplace or EBay, **Our Product** focuses on free items and locations for pickup. Come and list your own items, or simply browse around. See something you like? Send a message to meetup! Modify your profile to make it extra appealing to other any potential **Lowballers** looking for free goods.
+**For** home owners **Who** are those looking to get rid of their household items that clutter their space, **The** Lowballers **is a** web application **That** lists items that they no longer use to be given away for free. **Unlike** Facebook Marketplace or EBay, **Our Product** focuses on free items and locations for pickup. Come and list your own items, or simply browse around. See something you like? Send a message to meetup! Or also modify your profile to make it extra appealing to any potential **Lowballers** looking for free goods.
 
 # Contributing:
 
