@@ -11,7 +11,7 @@ const isProd = process.env.NODE_ENV === "production";
 const cookieOptions = {
   httpOnly: true,
   secure: isProd, // set to true in production (HTTPS)
-  sameSite: isProd ? "None" : "Lax",
+  sameSite: "None",
   maxAge:  24 * 60 * 60 * 1000, // 1 day
 };
 
@@ -70,7 +70,7 @@ router.post("/login", async (req, res) => {
 
   // Send as httpOnly cookie
   res.cookie("token", token, cookieOptions);
-  
+
   res.json({
     message: "Login successful",
     user: { id: user._id, username: user.username },
