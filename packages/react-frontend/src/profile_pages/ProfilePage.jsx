@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import ProfileHeader from "./ProfileHeader";
 import ItemCard from "./ItemCard";
 import "./profile.css";
+import { useNavigate } from "react-router-dom";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_URL || "http://localhost:8000";
@@ -11,6 +11,8 @@ export default function ProfilePage() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchProfile() {
@@ -25,11 +27,13 @@ export default function ProfilePage() {
 
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
-          throw new Error(data.error || data.message || "Failed to load profile");
+          throw new Error(
+            data.error || data.message || "Failed to load profile"
+          );
         }
 
         const data = await res.json();
-        setProfile(data); // { id, username, profilePicture, itemsListed: [...] }
+        setProfile(data);
       } catch (err) {
         console.error("Error loading profile:", err);
         setError(err.message);
@@ -56,12 +60,20 @@ export default function ProfilePage() {
   const items = profile.itemsListed || [];
   const itemsCount = items.length;
 
+  const avatarSrc = profile.profilePicture
+    ? `${API_BASE_URL}${profile.profilePicture}`
+    : "./simplePFP.jpg";
+
   return (
     <div className="profile-page">
       <ProfileHeader
         username={profile.username}
-        info={`Member id: ${profile.id} • ${itemsCount} item${itemsCount === 1 ? "" : "s"} posted`}
-        // add profilePicture or other props here if your header uses them
+        bio={profile.bio}
+        meta={`Member id: ${profile.id} • ${itemsCount} item${
+          itemsCount === 1 ? "" : "s"
+        } posted`}
+        profilePicture={avatarSrc}
+        onEditClick={() => navigate("/profile/edit")}
       />
 
       <main className="items-list">
@@ -71,6 +83,8 @@ export default function ProfilePage() {
               key={item.id}
               name={item.name || item.itemName}
               info={item.description}
+              image={item.image}
+              profilePicture={profile.profilePicture}
             />
           ))
         ) : (
