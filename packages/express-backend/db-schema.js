@@ -11,18 +11,9 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  displayName: {
-    type: String,
-    trim: true,
-  },
   profilePicture: {
-    type: String,
+    type: String, // URL to the profile picture?
     trim: true,
-  },
-  bio: {
-    type: String,
-    trim: true,
-    default: "",
   },
   itemsListed: [
     {
