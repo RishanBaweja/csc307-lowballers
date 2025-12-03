@@ -24,6 +24,18 @@ console.log("DB_NAME loaded:", !!process.env.DB_NAME);
 const app = express();
 const port = process.env.PORT || 8000;
 
+// Config for both azure apps and local development
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://green-flower-09638de1e.3.azurestaticapps.net",
+      "https://lowballers-efdua2e5h8fsg5bx.westus3-01.azurewebsites.net"
+    ],
+    credentials: true,
+  })
+);
+
 // Resolve __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -49,18 +61,6 @@ const upload = multer({ storage });
 
 // Serve uploaded files
 app.use("/uploads", express.static(uploadDir));
-
-// Config for both azure apps and local development
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      "https://green-flower-09638de1e.3.azurestaticapps.net",
-      "https://lowballers-efdua2e5h8fsg5bx.westus3-01.azurewebsites.net"
-    ],
-    credentials: true,
-  })
-);
 
 app.use(express.json());
 app.use(cookieParser());
