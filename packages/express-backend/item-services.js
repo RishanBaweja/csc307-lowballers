@@ -18,12 +18,6 @@ function deleteItem(id) {
   return Item.findByIdAndDelete(id);
 }
 
-function getItemsByUserId(userId) {
-  // Find all items with this user's ObjectId
-  return Item.find({ userID: userId });
-}
-
-
 // Mapping function to convert MongoDB item to frontend format
 function mapItemToResponse(item) {
   return {
@@ -44,5 +38,4 @@ export default {
   findItemById,
   deleteItem,
   mapItemToResponse,
-  getItemsByUserId,
 };
