@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import ItemTable from "../ItemTable";
 import API_BASE from "../config";
 
-function Inbox() {
+export default function Inbox() {
   const [conversations, setConversations] = useState([]);
   const navigate = useNavigate();
 
@@ -54,7 +54,7 @@ function Inbox() {
       {conversations.map(conv => (
         <div
           key={conv._id}
-          onClick={() => navigate(`/conversation/${conv._id}`)}
+          onClick={() => navigate(`/conversation/${conv._id}/messages`)}
         >
           <p>
             <strong>Preview:</strong>{" "}
@@ -65,5 +65,3 @@ function Inbox() {
     </div>
   );
 }
-
-export default Inbox;

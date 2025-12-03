@@ -16,7 +16,7 @@ async function getInboxForUser(userId) {
  * If there is no converation then do not display anything
  * then it returns all messages sorted by how early the conversation is
  */
-async function getMessagesForUser(conversationId) {
+async function getMessagesForConversation(conversationId) {
   const conv = await Conversation.findById(conversationId).lean();
 
   if (!conv) return [];
@@ -90,4 +90,45 @@ async function sendMessage({ myUserId, otherUserId, itemId, text }) {
   return { conversation: conv, message: msg };
 }
 
-export default { getInboxForUser, getMessagesForUser, sendMessage };
+async function sendMessageToConversation({ conversationId, myUserId, text }) {
+  if (!text || !text.trim()) {
+    throw new Error("You have to send something");
+  }
+
+  // 1. Find the conversation
+  const conv = await Conversation.findById(conversationId);
+  if (!conv) throw new Error("Conversation not found");
+
+  // 2. Create the message
+  const msg = await Message.create({
+    conversationId: conv._id,
+    senderId: myUserId,
+    text: text.trim(),
+  });
+
+  // 3. Update conversation metadata
+  await Conversation.updateOne(
+    { _id: conv._id },
+    {
+      $set: {
+        lastMessage: {
+          id: msg._id,
+          senderId: myUserId,
+          preview: msg.text.slice(0, 15),
+          createdAt: msg.createdAt,
+        },
+        lastMessageAt: msg.createdAt,
+      },
+    }
+  );
+
+  // 4. Return just the message (what your frontend expects)
+  return msg.toObject ? msg.toObject() : msg;
+}
+
+export default {
+  getInboxForUser,
+  getMessagesForConversation,
+  sendMessage,
+  sendMessageToConversation,
+};

@@ -25,7 +25,7 @@ app.use(
     origin: [
       "http://localhost:5173",
       "https://green-flower-09638de1e.3.azurestaticapps.net",
-      "https://lowballers-efdua2e5h8fsg5bx.westus3-01.azurewebsites.net"
+      "https://lowballers-efdua2e5h8fsg5bx.westus3-01.azurewebsites.net",
     ],
     credentials: true,
   })
@@ -134,8 +134,7 @@ async function start() {
 
     app.post("/items", async (req, res) => {
       try {
-        const { name, description, location, amount, genre, image } =
-          req.body;
+        const { name, description, location, amount, genre, image } = req.body;
         const newItem = await itemServices.addItem({
           userID: req.user?._id,
           itemName: name,
@@ -179,7 +178,7 @@ async function start() {
       try {
         const { conversationId } = req.params;
         const messages =
-          await messageServices.getMessagesForUser(conversationId);
+          await messageServices.getMessagesForConversation(conversationId);
         res.status(200).json(messages);
       } catch (err) {
         res.status(404).json({ error: err.message });
@@ -187,17 +186,20 @@ async function start() {
     });
 
     // Send a message
-    app.post("/conversation/sendMessage", async (req, res) => {
+    app.post("/conversation/:conversationId/messages", async (req, res) => {
       try {
-        const { otherUserId, itemId, text } = req.body;
-        const result = await messageServices.sendMessage({
+        const { conversationId } = req.params;
+        const { text } = req.body;
+
+        const newMessage = await messageServices.sendMessageToConversation({
+          conversationId,
           myUserId: req.user._id,
-          otherUserId,
-          itemId,
           text,
         });
-        res.status(201).json(result);
+
+        res.status(201).json(newMessage);
       } catch (err) {
+        console.error("sendMessageToConversation error:", err);
         res.status(400).json({ error: err.message });
       }
     });

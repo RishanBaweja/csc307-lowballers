@@ -38,8 +38,11 @@ function deleteItem(id) {
   return Item.findByIdAndDelete(id);
 }
 
-
 //Message-related DB functions
+
+function findConversationById(id) {
+  return Conversation.findById(id);
+}
 
 function addMessage(data) {
   const messageToAdd = new Message(data);
@@ -73,9 +76,10 @@ export default {
   findItemById,
   deleteItem,
   // Message functions
+  findConversationById,
   addMessage,
   getMessages,
   // Catalog functions
   addCatalogEntry,
-  getCatalogEntries
+  getCatalogEntries,
 };
