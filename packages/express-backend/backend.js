@@ -7,12 +7,7 @@ import itemServices from "./item-services.js";
 import messageServices from "./message-services.js";
 import authRoutes from "./auth-routes.js";
 import cookieParser from "cookie-parser";
-import multer from "multer";
-import path from "path";
-import fs from "fs";
-import { fileURLToPath } from "url";
 import { attachUserIfPresent, requireAuth } from "./auth-middleware.js";
-import { User } from "./db-schema.js";
 
 // Load .env from project root
 config({ path: "../../.env" });
@@ -30,37 +25,11 @@ app.use(
     origin: [
       "http://localhost:5173",
       "https://green-flower-09638de1e.3.azurestaticapps.net",
-      "https://lowballers-efdua2e5h8fsg5bx.westus3-01.azurewebsites.net",
+      "https://lowballers-efdua2e5h8fsg5bx.westus3-01.azurewebsites.net"
     ],
     credentials: true,
   })
 );
-
-// Resolve __dirname for ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Ensure uploads directory exists
-const uploadDir = path.join(__dirname, "uploads");
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir);
-}
-
-// Multer storage: files stored as <userId>-timestamp.ext
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname) || "";
-    cb(null, `${req.user._id}-${Date.now()}${ext}`);
-  },
-});
-
-const upload = multer({ storage });
-
-// Serve uploaded files
-app.use("/uploads", express.static(uploadDir));
 
 app.use(express.json());
 app.use(cookieParser());
@@ -235,101 +204,6 @@ async function start() {
         res.status(400).json({ error: err.message });
       }
     });
-
-    app.get("/me", requireAuth, async (req, res) => {
-      try {
-        const userId = req.user._id;
-
-        // 1. Fetch the user from DB
-        const user = await db.findUserById(userId);
-        if (!user) {
-          return res.status(404).json({ error: "User not found" });
-        }
-
-        // 2. Fetch that user's items
-        const items = await itemServices.getItemsByUserId(userId);
-        const mappedItems = items.map(itemServices.mapItemToResponse);
-
-        // 3. Return a clean profile object
-        res.status(200).json({
-          id: user._id,
-          username: user.username,
-          displayName: user.displayName,
-          bio: user.bio || "",
-          profilePicture: user.profilePicture,
-          itemsListed: mappedItems,
-        });
-      } catch (err) {
-        console.error("Error fetching /me:", err);
-        res.status(500).json({ error: err.message });
-      }
-    });
-
-    app.patch("/me", requireAuth, async (req, res) => {
-      try {
-        const userId = req.user._id;
-        const { username, displayName, bio, profilePicture } = req.body;
-
-        const updates = {};
-        if (username !== undefined) updates.username = username;
-        if (displayName !== undefined) updates.displayName = displayName;
-        if (bio !== undefined) updates.bio = bio;
-        if (profilePicture !== undefined) updates.profilePicture = profilePicture;
-
-        const updatedUser = await User.findByIdAndUpdate(userId, updates, {
-          new: true,
-          runValidators: true,
-        });
-
-        if (!updatedUser) {
-          return res.status(404).json({ error: "User not found" });
-        }
-
-        const items = await itemServices.getItemsByUserId(userId);
-        const mappedItems = items.map(itemServices.mapItemToResponse);
-
-        res.status(200).json({
-          id: updatedUser._id,
-          username: updatedUser.username,
-          displayName: updatedUser.displayName,
-          bio: updatedUser.bio || "",
-          profilePicture: updatedUser.profilePicture,
-          itemsListed: mappedItems,
-        });
-      } catch (err) {
-        console.error("Error updating /me:", err);
-        res.status(500).json({ error: err.message });
-      }
-    });
-
-    // Upload & save profile picture
-    app.post(
-      "/me/profile-picture",
-      requireAuth,
-      upload.single("profilePicture"), // "avatar" must match the field name in the form
-      async (req, res) => {
-        try {
-          if (!req.file) {
-            return res.status(400).json({ error: "No file uploaded" });
-          }
-
-          // This is the URL the frontend can use
-          const profilePictureUrl = `/uploads/${req.file.filename}`;
-
-          // Save it on the user document
-          await User.findByIdAndUpdate(req.user._id, {
-            profilePicture: profilePictureUrl,
-          });
-
-          res.status(200).json({ profilePicture: profilePictureUrl });
-        } catch (err) {
-          console.error("Error uploading profile picture:", err);
-          res.status(500).json({ error: "Failed to upload profile picture" });
-        }
-      }
-    );
-
-
 
     app.listen(port, () => {
       console.log(`Example app listening at http://localhost:${port}`);
