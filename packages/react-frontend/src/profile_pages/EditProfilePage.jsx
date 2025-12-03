@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./profile.css";
-
-const API_BASE_URL =
-  import.meta.env.VITE_API_URL || "http://localhost:8000";
+import API_BASE from "../config";
 
 export default function EditProfilePage() {
   const navigate = useNavigate();
@@ -20,7 +18,7 @@ export default function EditProfilePage() {
   useEffect(() => {
     async function loadProfile() {
       try {
-        const res = await fetch(`${API_BASE_URL}/me`, {
+        const res = await fetch(`${API_BASE}/me`, {
           credentials: "include",
         });
         if (!res.ok) throw new Error("Failed to load profile");
@@ -52,7 +50,7 @@ export default function EditProfilePage() {
         formData.append("profilePicture", newAvatarFile);
 
         const uploadRes = await fetch(
-          `${API_BASE_URL}/me/profile-picture`,
+          `${API_BASE}/me/profile-picture`,
           {
             method: "POST",
             credentials: "include",
@@ -72,7 +70,7 @@ export default function EditProfilePage() {
       }
 
       // 2) Now update the rest of the profile (and profilePicture)
-      const patchRes = await fetch(`${API_BASE_URL}/me`, {
+      const patchRes = await fetch(`${API_BASE}/me`, {
         method: "PATCH",
         credentials: "include",
         headers: {
@@ -106,7 +104,7 @@ export default function EditProfilePage() {
 
   // Build a usable img src (backend returns "/uploads/..." usually)
   const currentAvatarSrc = currentProfilePicture
-    ? `${API_BASE_URL}${currentProfilePicture}`
+    ? `${API_BASE}${currentProfilePicture}`
     : "";
 
   return (

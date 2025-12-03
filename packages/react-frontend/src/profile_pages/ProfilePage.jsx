@@ -3,7 +3,7 @@ import ProfileHeader from "./ProfileHeader";
 import ItemCard from "./ItemCard";
 import "./profile.css";
 import { useNavigate } from "react-router-dom";
-import API_BASE from "../config.js";
+import API_BASE from "../config";
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState(null);
