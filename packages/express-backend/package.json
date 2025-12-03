@@ -9,7 +9,7 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "echo \"No backend tests\"",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --runInBand --coverage",
     "dev": "npx nodemon backend.js",
     "start": "node backend.js"
   },
@@ -20,14 +20,15 @@
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.19.2",
-    "multer": "^2.0.2"
+    "mongoose": "^8.19.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@jest/globals": "^30.2.0",
     "eslint": "^9.39.1",
     "eslint-plugin-react": "^7.37.5",
     "globals": "^16.5.0",
+    "jest": "^30.2.0",
     "nodemon": "^3.1.10",
     "typescript-eslint": "^8.46.3"
   }
