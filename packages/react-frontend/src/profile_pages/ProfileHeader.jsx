@@ -1,10 +1,11 @@
 // ProfileHeader.jsx
 export default function ProfileHeader({
-  username,
+  displayName,
   bio,
   meta,
   profilePicture,
   onEditClick,
+  onAddItemClick
 }) {
   const avatarSrc = profilePicture || "./simplePFP.jpg";
 
@@ -13,7 +14,10 @@ export default function ProfileHeader({
       <div className="profile-topbar">
         <input className="searchabr" placeholder="Search for Item" />
 
-        <button className="add-item">+</button>
+        <button className="add-item" type="button" onClick={onAddItemClick}>
+          +
+        </button>
+
         <button className="inbox">Inbox</button>
         <img
           src={avatarSrc}
@@ -29,7 +33,7 @@ export default function ProfileHeader({
           className="avatar-lg"
         />
         <div className="username-block">
-          <div className="username">{username}</div>
+          <div className="username">{displayName}</div>
           {meta && <div className="meta">{meta}</div>}
           <button className="edit-profile-btn" onClick={onEditClick}>
             Edit profile

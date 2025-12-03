@@ -32,6 +32,7 @@ export default function ProfilePage() {
 
         const data = await res.json();
         setProfile(data);
+        console.log("PROFILE FROM /me:", data);
       } catch (err) {
         console.error("Error loading profile:", err);
         setError(err.message);
@@ -62,16 +63,18 @@ export default function ProfilePage() {
     ? `${API_BASE}${profile.profilePicture}`
     : "./simplePFP.jpg";
 
+    const displayName = profile.displayName || profile.username || "";
   return (
     <div className="profile-page">
       <ProfileHeader
-        username={profile.username}
+        displayName={displayName}
         bio={profile.bio}
         meta={`Member id: ${profile.id} • ${itemsCount} item${
           itemsCount === 1 ? "" : "s"
         } posted`}
         profilePicture={avatarSrc}
         onEditClick={() => navigate("/profile/edit")}
+        onAddItemClick={() => navigate("/add-item")}
       />
 
       <main className="items-list">

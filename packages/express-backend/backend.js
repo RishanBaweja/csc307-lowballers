@@ -254,7 +254,7 @@ async function start() {
         res.status(200).json({
           id: user._id,
           username: user.username,
-          displayName: user.displayName,
+          displayName: user.displayName || user.username,
           bio: user.bio || "",
           profilePicture: user.profilePicture,
           itemsListed: mappedItems,
