@@ -23,6 +23,33 @@ function getItemsByUserId(userId) {
   return Item.find({ userID: userId });
 }
 
+function searchItemsByName(searchTerm) {
+  // Case-insensitive search using regex for both name and location
+  const regex = new RegExp(searchTerm, 'i');
+  return Item.find({ 
+    $or: [
+      { itemName: { $regex: regex } },
+      { location: { $regex: regex } }
+    ]
+  }).populate("userID");
+}
+
+function getItemsByLocation(location) {
+  // Exact match for location filter
+  return Item.find({ location: location }).populate("userID");
+}
+
+function searchItemsWithLocationFilter(searchTerm, location) {
+  // Search by name/description AND filter by exact location
+  const regex = new RegExp(searchTerm, 'i');
+  return Item.find({ 
+    location: location,
+    $or: [
+      { itemName: { $regex: regex } },
+      { description: { $regex: regex } }
+    ]
+  }).populate("userID");
+}
 
 // Mapping function to convert MongoDB item to frontend format
 function mapItemToResponse(item) {
@@ -45,4 +72,7 @@ export default {
   deleteItem,
   mapItemToResponse,
   getItemsByUserId,
+  searchItemsByName,
+  getItemsByLocation,
+  searchItemsWithLocationFilter,
 };
