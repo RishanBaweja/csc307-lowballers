@@ -118,9 +118,6 @@ async function start() {
       }
     });
 
-    //ISSUE: "error": "Cast to ObjectId failed for value \"1\" (type number) at path \"_id\" for model \"User\""
-    //RUN TESTS ON THIS LATER
-    // http://localhost:8000/items/6913e0ae150080701a2af553
     app.get("/items/:id", async (req, res) => {
       try {
         const { id } = req.params;

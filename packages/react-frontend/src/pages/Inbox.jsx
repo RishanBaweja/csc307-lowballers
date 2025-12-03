@@ -3,9 +3,8 @@ import { useNavigate } from "react-router-dom";
 import ItemTable from "../ItemTable";
 import API_BASE from "../config";
 
-
 function Inbox() {
-  const [items, setItems] = useState([]);
+  const [conversations, setConversations] = useState([]);
   const navigate = useNavigate();
 
   // Fetch items from backend on component mount
@@ -15,27 +14,26 @@ function Inbox() {
 
   async function fetchConversations() {
     try {
-      const response = await fetch(`${API_BASE}/items`);
-      if (response.ok) {
-        const data = await response.json();
-        setItems(data.items_list || []);
-      } else {
-        console.error("Failed to fetch items");
+      const response = await fetch(`${API_BASE}/conversation`, {
+        credentials: "include",
+      });
+      if (!response.ok) {
+        console.error("Failed to fetch conversations");
+        return;
       }
+      const data = await response.json();
+      setConversations(data);
     } catch (error) {
-      console.error("Error fetching items:", error);
+      console.error("Error fetching conversations:", error);
     }
   }
 
   async function removeItem(index) {
     const itemToDelete = items[index];
     try {
-      const response = await fetch(
-        `${API_BASE}/items/${itemToDelete.id}`,
-        {
-          method: "DELETE",
-        }
-      );
+      const response = await fetch(`${API_BASE}/items/${itemToDelete.id}`, {
+        method: "DELETE",
+      });
 
       if (response.ok) {
         const updatedItems = items.filter((_, i) => i !== index);
@@ -51,10 +49,19 @@ function Inbox() {
   }
 
   return (
-    <div className="items-page">
-      <h1>All Items</h1>
-      <button onClick={() => navigate("/add-item")}>Add New Item</button>
-      <ItemTable items={items} removeItem={removeItem} />
+    <div>
+      <h1>Inbox</h1>
+      {conversations.map(conv => (
+        <div
+          key={conv._id}
+          onClick={() => navigate(`/conversation/${conv._id}`)}
+        >
+          <p>
+            <strong>Preview:</strong>{" "}
+            {conv.lastMessage?.preview ?? "(no messages)"}
+          </p>
+        </div>
+      ))}
     </div>
   );
 }
