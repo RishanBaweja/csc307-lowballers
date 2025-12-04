@@ -1,4 +1,4 @@
-import { User, Item, Catalog, Message } from "./db-schema.js";
+import { User, Item, Catalog, Message, Conversation } from "./db-schema.js";
 
 //User-related DB functions
 

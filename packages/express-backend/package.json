@@ -9,7 +9,7 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "echo \"Tests are temporarily disabled\" && exit 0",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --runInBand --coverage",
     "dev": "npx nodemon backend.js",
     "start": "node backend.js"
   },

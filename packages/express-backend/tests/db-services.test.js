@@ -1,6 +1,6 @@
 import { jest } from "@jest/globals";
 import db from "../db-services.js";
-import { User, Item, Catalog, Message } from "../db-schema.js";
+import { User, Item, Catalog, Message, Conversation } from "../db-schema.js";
 
 afterEach(() => {
   jest.restoreAllMocks();
@@ -155,5 +155,19 @@ describe("db-services: Catalog + Message functions", () => {
     expect(findMock).toHaveBeenCalledTimes(1);
     expect(query.populate).toHaveBeenCalledWith(["buyerID", "itemID"]);
     expect(result).toBe(fakeMsgs);
+  });
+});
+
+describe("db-services: Conversation functions", () => {
+  test("findConversationById calls Conversation.findById and returns result", async () => {
+    const fakeConv = { _id: "c1" };
+    const findByIdMock = jest
+      .spyOn(Conversation, "findById")
+      .mockResolvedValue(fakeConv);
+
+    const result = await db.findConversationById("c1");
+
+    expect(findByIdMock).toHaveBeenCalledWith("c1");
+    expect(result).toBe(fakeConv);
   });
 });

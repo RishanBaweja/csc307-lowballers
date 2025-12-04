@@ -135,8 +135,10 @@ async function sendMessageToConversation({ conversationId, myUserId, text }) {
   );
 
   // 4. Return just the message (what your frontend expects)
-  return msg.toObject ? msg.toObject() : msg;
+  const populatedMsg = await msg.populate("senderId", "displayName username");
+  return populatedMsg.toObject ? populatedMsg.toObject() : populatedMsg;
 }
+
 
 async function startConversationFromItem({ myUserId, otherUserId, itemId }) {
   // 1. Load the raw item from Mongo

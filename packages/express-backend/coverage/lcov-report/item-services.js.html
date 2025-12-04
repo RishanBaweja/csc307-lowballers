@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">53.84% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>7/13</span>
+                <span class='fraction'>13/13</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">55.55% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>5/9</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">53.84% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>7/13</span>
+                <span class='fraction'>13/13</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -148,28 +148,28 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -179,13 +179,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -239,15 +239,15 @@ function deleteItem(id) {
   return Item.findByIdAndDelete(id);
 }
 &nbsp;
-function <span class="fstat-no" title="function not covered" >getItemsByUserId(</span>userId) {
+function getItemsByUserId(userId) {
   // Find all items with this user's ObjectId
-<span class="cstat-no" title="statement not covered" >  return Item.find({ userID: userId });</span>
+  return Item.find({ userID: userId });
 }
 &nbsp;
-function <span class="fstat-no" title="function not covered" >searchItemsByName(</span>searchTerm) {
+function searchItemsByName(searchTerm) {
   // Case-insensitive search using regex for both name and location
-  const regex = <span class="cstat-no" title="statement not covered" >new RegExp(searchTerm, 'i');</span>
-<span class="cstat-no" title="statement not covered" >  return Item.find({ </span>
+  const regex = new RegExp(searchTerm, 'i');
+  return Item.find({ 
     $or: [
       { itemName: { $regex: regex } },
       { location: { $regex: regex } }
@@ -255,15 +255,15 @@ function <span class="fstat-no" title="function not covered" >searchItemsByName(
   }).populate("userID");
 }
 &nbsp;
-function <span class="fstat-no" title="function not covered" >getItemsByLocation(</span>location) {
+function getItemsByLocation(location) {
   // Exact match for location filter
-<span class="cstat-no" title="statement not covered" >  return Item.find({ location: location }).populate("userID");</span>
+  return Item.find({ location: location }).populate("userID");
 }
 &nbsp;
-function <span class="fstat-no" title="function not covered" >searchItemsWithLocationFilter(</span>searchTerm, location) {
+function searchItemsWithLocationFilter(searchTerm, location) {
   // Search by name/description AND filter by exact location
-  const regex = <span class="cstat-no" title="statement not covered" >new RegExp(searchTerm, 'i');</span>
-<span class="cstat-no" title="statement not covered" >  return Item.find({ </span>
+  const regex = new RegExp(searchTerm, 'i');
+  return Item.find({ 
     location: location,
     $or: [
       { itemName: { $regex: regex } },
@@ -304,7 +304,7 @@ export default {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-12-04T03:24:54.953Z
+                at 2025-12-04T18:28:25.127Z
             </div>
         <script src="prettify.js"></script>
         <script>
