@@ -1,4 +1,6 @@
 // ProfileHeader.jsx
+import { useOutletContext, useNavigate } from "react-router-dom";
+
 export default function ProfileHeader({
   displayName,
   username,
@@ -8,6 +10,9 @@ export default function ProfileHeader({
   onEditClick,
   onAddItemClick,
 }) {
+
+  const navigate = useNavigate();
+  
   const nameToShow = displayName || username;
   const avatarSrc = profilePicture || "./simplePFP.jpg";
 
@@ -19,7 +24,9 @@ export default function ProfileHeader({
         <button className="add-item" type="button" onClick={onAddItemClick}>
           +
         </button>
-        <button className="inbox">Inbox</button>
+        <button className="inbox" onClick={() => navigate("/inbox")}>
+        Inbox
+      </button>
         <img
           src={avatarSrc}
           alt="PFP"
