@@ -1,5 +1,5 @@
 import itemServices from "./item-services.js";
-import { Conversation, Message, Item } from "./db-schema.js";
+import { Conversation, Message, Item, User} from "./db-schema.js";
 
 /* Gets both buyer and seller conversations for the user
  * Means that it does not matter if a user is a buyer or seller,
@@ -23,8 +23,12 @@ async function getMessagesForConversation(conversationId) {
 
   const q = { conversationId: conv._id };
 
-  return Message.find(q).sort({ createdAt: 1 }).lean();
+  return Message.find(q)
+    .sort({ createdAt: 1 })
+    .populate("senderId", "displayName username") // ⬅️ key line
+    .lean();
 }
+
 
 /* Sends messages for user based on conversation params
  * If there is no converation then creates it
@@ -87,7 +91,15 @@ async function sendMessage({ myUserId, otherUserId, itemId, text }) {
     }
   );
   // Return
-  return { conversation: conv, message: msg };
+  // Populate sender for the returned message
+  const populatedMsg = await msg.populate("senderId", "displayName username");
+
+  return {
+    conversation: conv,
+    message: populatedMsg.toObject ? populatedMsg.toObject() : populatedMsg,
+  };
+
+
 }
 
 async function sendMessageToConversation({ conversationId, myUserId, text }) {

@@ -8,32 +8,33 @@ export default function ConversationPage() {
   const [text, setText] = useState("");
   const [otherUser, setOtherUser] = useState(null);
 
+  async function fetchMessages() {
+    const res = await fetch(
+      `${API_BASE}/conversation/${conversationId}/messages`,
+      { credentials: "include" }
+    );
+    if (!res.ok) return;
+    const data = await res.json();
+    setMessages(data);
+  }
+
+  async function fetchOtherUser() {
+    const res = await fetch(
+      `${API_BASE}/conversation/${conversationId}/other-user`,
+      { credentials: "include" }
+    );
+    if (!res.ok) return;
+    const data = await res.json();
+    setOtherUser(data);
+  }
+
   useEffect(() => {
-    async function fetchMessages() {
-      const res = await fetch(
-        `${API_BASE}/conversation/${conversationId}/messages`,
-        { credentials: "include" }
-      );
-      if (!res.ok) return;
-      const data = await res.json();
-      setMessages(data);
-    }
-
-    async function fetchOtherUser() {
-      const res = await fetch(
-        `${API_BASE}/conversation/${conversationId}/other-user`,
-        { credentials: "include" }
-      );
-      if (!res.ok) return;
-      const data = await res.json();
-      setOtherUser(data);
-    }
-
     if (conversationId) {
       fetchMessages();
       fetchOtherUser();
     }
   }, [conversationId]);
+
 
   async function handleSend(e) {
     e.preventDefault();
@@ -53,9 +54,9 @@ export default function ConversationPage() {
         console.error("Failed to send message");
         return;
       }
-      const newMsg = await res.json();
-      setMessages(prev => [...prev, newMsg]);
+      await res.json();
       setText("");
+      await fetchMessages(); // Refresh messages to get populated sender info
     } catch (err) {
       console.error("Error sending message:", err);
     }
@@ -69,12 +70,21 @@ export default function ConversationPage() {
       </h2>
 
       <div>
-        {messages.map(m => (
-          <div key={m._id}>
-            <span>{m.text}</span>
-          </div>
-        ))}
+        {messages.map(m => {
+          // senderId is a populated user object because of .populate("senderId", ...)
+          const sender = m.senderId;
+          const name =
+            sender?.displayName || sender?.username || "Unknown user";
+
+          return (
+            <div key={m._id}>
+              <strong>{name}:</strong> <span>{m.text}</span>
+            </div>
+          );
+        })}
       </div>
+
+
 
       <form onSubmit={handleSend}>
         <input
