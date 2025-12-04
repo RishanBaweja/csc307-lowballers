@@ -80,7 +80,7 @@ export default function EditProfilePage() {
         body.profilePicture = profilePictureUrl;
       }
 
-      const patchRes = await fetch(`${API_BASE_URL}/me`, {
+      const patchRes = await fetch(`${API_BASE}/me`, {
         method: "PATCH",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
