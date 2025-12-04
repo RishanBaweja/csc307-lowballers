@@ -14,6 +14,8 @@
 
 ## UI Prototype (Last modified 10/30)
 - https://www.figma.com/design/z7bFkwgJs3Sz1fpo6f3fTb/Schematic?node-id=0-1&t=MuqgWuLVq0VVcU8E-1
+### NEW DESIGN
+- https://www.mermaidchart.com/app/projects/99135421-1329-499f-b8ed-8217993a6fae/diagrams/ff534a5c-de12-4fea-aac0-fdcc7c752da9/share/invite/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkb2N1bWVudElEIjoiZmY1MzRhNWMtZGUxMi00ZmVhLWFhYzAtZmRjYzdjNzUyZGE5IiwiYWNjZXNzIjoiVmlldyIsImlhdCI6MTc2NDg3MDgwMn0.UzwFwjp8YmYoaCvHPLLQP2n0JqgbPFyc8ZcjO9vifeE
 
 ## Developer Setup
 *Prerequisites*
