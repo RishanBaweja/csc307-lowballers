@@ -19,7 +19,6 @@ export default function ProfileHeader({
   return (
     <header className="profile-header">
       <div className="profile-topbar">
-        <input className="searchabr" placeholder="Search for Item" />
 
         <button className="add-item" type="button" onClick={onAddItemClick}>
           +
