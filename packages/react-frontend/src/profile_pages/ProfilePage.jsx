@@ -60,7 +60,7 @@ export default function ProfilePage() {
 
   const avatarSrc = profile.profilePicture
     ? `${API_BASE}${profile.profilePicture}`
-    : "./simplePFP.jpg";
+    : "./example.png";
 
   return (
     <div className="profile-page">
