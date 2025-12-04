@@ -10,7 +10,6 @@ export default function ItemCard({ name, info, image, profilePicture }) {
           className="avatar-post"
         />
         <h2 className="item-name">{name}</h2>
-        <button className="more">...</button>
       </header>
 
       {image && (
