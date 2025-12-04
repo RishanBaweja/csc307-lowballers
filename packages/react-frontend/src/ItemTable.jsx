@@ -1,7 +1,38 @@
 import React from "react";
 import styles from "./itemtable.module.css";
+import API_BASE from "./config";
+import { useNavigate } from "react-router-dom";
 
 function ItemCard({ item, index, removeItem }) {
+  const navigate = useNavigate();
+
+  async function handleMessageSeller() {
+    try {
+      const res = await fetch(`${API_BASE}/conversation/start`, {
+        method: "POST",
+        credentials: "include", // important
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          otherUserId: item.userId, // make sure these are correct
+          itemId: item.id, // depending on your mapItemToResponse
+        }),
+      });
+
+      const bodyText = await res.text();
+      console.log("start conversation response:", res.status, bodyText);
+
+      if (!res.ok) {
+        console.error("Failed to start conversation");
+        return;
+      }
+
+      const data = JSON.parse(bodyText); // or: const data = await res.json();
+      // navigate to conversation
+      navigate(`/conversation/${data.conversationId}/messages`);
+    } catch (err) {
+      console.error("Error starting conversation:", err);
+    }
+  }
   return (
     <div className={styles.card}>
       <div className={styles.imageContainer}>
@@ -28,6 +59,13 @@ function ItemCard({ item, index, removeItem }) {
             ) : (
               <span className={styles.tag}>{item.genre}</span>
             )}
+            <button
+              type="button"
+              className={styles.messageButton}
+              onClick={handleMessageSeller}
+            >
+              Message Seller
+            </button>
           </div>
         )}
       </div>
