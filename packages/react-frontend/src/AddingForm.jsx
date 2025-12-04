@@ -80,14 +80,20 @@ function AddingForm(props) {
         required
       />
       <label htmlFor="location">location</label>
-      <input
-        type="text"
+      <select
         name="location"
         id="location"
         value={item.location}
         onChange={handleChange}
         required
-      />
+      >
+        <option value="">Select a location</option>
+        <option value="San Luis Obispo">San Luis Obispo</option>
+        <option value="Morro Bay">Morro Bay</option>
+        <option value="Atascadero">Atascadero</option>
+        <option value="Pismo Beach">Pismo Beach</option>
+        <option value="Santa Maria">Santa Maria</option>
+      </select>
       <label htmlFor="amount">amount</label>
       <input
         type="number"
