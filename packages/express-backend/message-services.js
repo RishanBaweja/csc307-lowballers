@@ -23,7 +23,7 @@ async function getMessagesForConversation(conversationId) {
 
   const q = { conversationId: conv._id };
 
-  return Message.find(q).sort({ createdAt: -1 }).lean();
+  return Message.find(q).sort({ createdAt: 1 }).lean();
 }
 
 /* Sends messages for user based on conversation params
