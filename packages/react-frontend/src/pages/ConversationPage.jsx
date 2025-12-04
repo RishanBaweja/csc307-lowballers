@@ -6,27 +6,32 @@ export default function ConversationPage() {
   const { conversationId } = useParams();
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
+  const [otherUser, setOtherUser] = useState(null);
 
   useEffect(() => {
     async function fetchMessages() {
-      try {
-        const res = await fetch(
-          `${API_BASE}/conversation/${conversationId}/messages`,
-          { credentials: "include" }
-        );
-        if (!res.ok) {
-          console.error("Failed to fetch messages");
-          return;
-        }
-        const data = await res.json();
-        setMessages(data);
-      } catch (err) {
-        console.error("Error fetching messages:", err);
-      }
+      const res = await fetch(
+        `${API_BASE}/conversation/${conversationId}/messages`,
+        { credentials: "include" }
+      );
+      if (!res.ok) return;
+      const data = await res.json();
+      setMessages(data);
+    }
+
+    async function fetchOtherUser() {
+      const res = await fetch(
+        `${API_BASE}/conversation/${conversationId}/other-user`,
+        { credentials: "include" }
+      );
+      if (!res.ok) return;
+      const data = await res.json();
+      setOtherUser(data);
     }
 
     if (conversationId) {
       fetchMessages();
+      fetchOtherUser();
     }
   }, [conversationId]);
 
@@ -49,7 +54,7 @@ export default function ConversationPage() {
         return;
       }
       const newMsg = await res.json();
-      setMessages(prev => [...prev, newMsg]); // append
+      setMessages(prev => [...prev, newMsg]);
       setText("");
     } catch (err) {
       console.error("Error sending message:", err);
@@ -58,7 +63,11 @@ export default function ConversationPage() {
 
   return (
     <div>
-      <h2>Conversation With {conversationId}</h2>
+      <h2>
+        Conversation with{" "}
+        {otherUser ? otherUser.displayName || otherUser.username : "Loading..."}
+      </h2>
+
       <div>
         {messages.map(m => (
           <div key={m._id}>

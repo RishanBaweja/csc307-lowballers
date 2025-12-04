@@ -12,7 +12,7 @@ import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import { attachUserIfPresent, requireAuth } from "./auth-middleware.js";
-import { User } from "./db-schema.js";
+import { User, Conversation } from "./db-schema.js";
 
 // Load .env from project root
 config({ path: "../../.env" });
@@ -149,9 +149,11 @@ app.get("/items/search", async (req, res) => {
   try {
     const { q, location } = req.query;
     if ((!q || q.trim() === "") && !location) {
-      return res.status(400).json({ error: "Search query or location filter is required" });
+      return res
+        .status(400)
+        .json({ error: "Search query or location filter is required" });
     }
-    
+
     let items;
     if (location && (!q || q.trim() === "")) {
       // Filter by location only
@@ -161,9 +163,12 @@ app.get("/items/search", async (req, res) => {
       items = await itemServices.searchItemsByName(q.trim());
     } else {
       // Combined search and location filter
-      items = await itemServices.searchItemsWithLocationFilter(q.trim(), location);
+      items = await itemServices.searchItemsWithLocationFilter(
+        q.trim(),
+        location
+      );
     }
-    
+
     const mapped = items.map(itemServices.mapItemToResponse);
     res.status(200).json({ items_list: mapped });
   } catch (err) {
@@ -281,6 +286,42 @@ app.post("/conversation/start", async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 });
+
+app.get(
+  "/conversation/:conversationId/other-user",
+  requireAuth,
+  async (req, res) => {
+    try {
+      const { conversationId } = req.params;
+
+      const conv = await Conversation.findById(conversationId).lean();
+      if (!conv) {
+        return res.status(404).json({ error: "Conversation not found" });
+      }
+
+      const me = req.user._id.toString();
+      const buyer = conv.buyerId.toString();
+      const seller = conv.sellerId.toString();
+
+      const otherUserId = me === buyer ? seller : buyer;
+
+      const otherUser = await db.findUserById(otherUserId);
+      if (!otherUser) {
+        return res.status(404).json({ error: "Other user not found" });
+      }
+
+      res.json({
+        id: otherUser._id,
+        username: otherUser.username,
+        displayName: otherUser.displayName,
+        profilePicture: otherUser.profilePicture,
+      });
+    } catch (err) {
+      console.error("Error fetching other user for conversation:", err);
+      res.status(500).json({ error: err.message });
+    }
+  }
+);
 
 // Current user profile
 app.get("/me", requireAuth, async (req, res) => {
