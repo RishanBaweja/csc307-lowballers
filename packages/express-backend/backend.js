@@ -144,6 +144,34 @@ app.get("/items", async (req, res) => {
   }
 });
 
+// Search items by name and location
+app.get("/items/search", async (req, res) => {
+  try {
+    const { q, location } = req.query;
+    if ((!q || q.trim() === "") && !location) {
+      return res.status(400).json({ error: "Search query or location filter is required" });
+    }
+    
+    let items;
+    if (location && (!q || q.trim() === "")) {
+      // Filter by location only
+      items = await itemServices.getItemsByLocation(location);
+    } else if (q && q.trim() !== "" && !location) {
+      // Search by name/location text only
+      items = await itemServices.searchItemsByName(q.trim());
+    } else {
+      // Combined search and location filter
+      items = await itemServices.searchItemsWithLocationFilter(q.trim(), location);
+    }
+    
+    const mapped = items.map(itemServices.mapItemToResponse);
+    res.status(200).json({ items_list: mapped });
+  } catch (err) {
+    console.error("could not search items:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // http://localhost:8000/items/6913e0ae150080701a2af553
 app.get("/items/:id", async (req, res) => {
   try {
