@@ -65,6 +65,7 @@ export default function ProfilePage() {
   return (
     <div className="profile-page">
       <ProfileHeader
+        displayName={profile.displayName}
         username={profile.username}
         bio={profile.bio}
         meta={`Member id: ${profile.id} • ${itemsCount} item${
