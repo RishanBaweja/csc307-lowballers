@@ -212,4 +212,28 @@ async function start() {
     process.exit(1);
   }
 }
+
+app.post("/conversation/start", async (req, res) => {
+  try {
+    const { otherUserId, itemId } = req.body;
+    if (!otherUserId || !itemId) {
+      return res
+        .status(400)
+        .json({ error: "otherUserId and itemId are required" });
+    }
+
+    const conv = await messageServices.startConversationFromItem({
+      myUserId: req.user._id, // from auth cookie
+      otherUserId,
+      itemId,
+    });
+
+    res.status(201).json({
+      conversationId: conv._id,
+      conversation: conv,
+    });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
 start();

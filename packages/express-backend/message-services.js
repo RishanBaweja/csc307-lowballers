@@ -1,5 +1,5 @@
-import items from "./db-services.js";
-import { Conversation, Message } from "./db-schema.js";
+import itemServices from "./item-services.js";
+import { Conversation, Message, Item } from "./db-schema.js";
 
 /* Gets both buyer and seller conversations for the user
  * Means that it does not matter if a user is a buyer or seller,
@@ -38,7 +38,7 @@ async function sendMessage({ myUserId, otherUserId, itemId, text }) {
   }
 
   // Error checking on items
-  const item = await items.findItemById(itemId);
+  const item = await itemServices.findItemById(itemId);
   if (!item) throw new Error("Item not found");
 
   // For whoever owns the item check
@@ -126,9 +126,44 @@ async function sendMessageToConversation({ conversationId, myUserId, text }) {
   return msg.toObject ? msg.toObject() : msg;
 }
 
+async function startConversationFromItem({ myUserId, otherUserId, itemId }) {
+  // 1. Load the raw item from Mongo
+  const item = await Item.findById(itemId).lean();
+  console.log("[startConversationFromItem] item =", item);
+
+  if (!item) throw new Error("Item not found");
+
+  // 2. Identify seller correctly
+  const rawSeller = item.userID || item.userId || item.sellerId;
+  if (!rawSeller) throw new Error("Item is missing seller userID");
+
+  const sellerId = rawSeller.toString();
+  const me = myUserId.toString();
+  const other = otherUserId.toString();
+
+  const buyerId = me === sellerId ? other : me;
+
+  // 3. Find or create conversation
+  const conv = await Conversation.findOneAndUpdate(
+    { itemId, buyerId, sellerId },
+    {
+      $setOnInsert: {
+        itemId,
+        buyerId,
+        sellerId,
+        lastMessageAt: new Date(0),
+      },
+    },
+    { upsert: true, new: true }
+  );
+
+  return conv;
+}
+
 export default {
   getInboxForUser,
   getMessagesForConversation,
   sendMessage,
   sendMessageToConversation,
+  startConversationFromItem,
 };
