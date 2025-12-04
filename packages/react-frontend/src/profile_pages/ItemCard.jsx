@@ -1,30 +1,13 @@
-export default function ItemCard({ name, info, image, profilePicture }) {
-  const avatarSrc = profilePicture || "./simplePFP.jpg";
-
+export default function ItemCard({ name, info }) {
   return (
     <article className="item-list">
       <header className="item-top">
-        <img
-          src={avatarSrc}
-          alt="Your Profile"
-          className="avatar-post"
-        />
+        <img src="./example.png" alt="Your Profile" className="avatar-post" />
         <h2 className="item-name">{name}</h2>
         <button className="more">...</button>
       </header>
-
-      {image && (
-        <img
-          src={image}
-          alt={name}
-          className="item-photo"
-          style={{ width: "50%", borderRadius: "8px", marginTop: "10px" }}
-        />
-      )}
-
-      <br />
+      <br></br>
       <p className="item-info">{info}</p>
     </article>
   );
 }
-

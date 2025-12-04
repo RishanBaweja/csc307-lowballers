@@ -53,10 +53,20 @@ export default function Home() {
       <section style={{ marginBottom: "1.5rem" }}>
         <h2>What is Lowballers?</h2>
         <p style={{ maxWidth: "600px" }}>
-          Lowballers is a community-driven platform for exchanging free items. 
-          Users can post items they no longer need, browse listings from others, 
-          and coordinate pick-ups through built-in messaging — no money involved, 
-          just giving things a second life.
+          Lowballers is a community-driven platform for exchanging free items.
+          Users can post items they no longer need, browse listings from others,
+          and coordinate pick-ups through built-in messaging — no money
+          involved, just giving things a second life. If you are meeting in
+          person, please be wary and utilize safe meeting practices like meeting
+          in public locations. The creators of Lowballers are not responsible
+          for what occurs during meetups, please meet at your own risk.
+        </p>
+        <h2>Important Note</h2>
+        <p style={{ maxWidth: "600px" }}>
+          If you are meeting in person, please be wary and utilize safe meeting
+          practices like bringing trusted adults to meets and meeting in public
+          locations. The creators of Lowballers are not responsible for what
+          occurs during meetups, please meet at your own risk.
         </p>
       </section>
 
