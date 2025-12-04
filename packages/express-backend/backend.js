@@ -25,11 +25,37 @@ app.use(
     origin: [
       "http://localhost:5173",
       "https://green-flower-09638de1e.3.azurestaticapps.net",
-      "https://lowballers-efdua2e5h8fsg5bx.westus3-01.azurewebsites.net",
+      "https://lowballers-efdua2e5h8fsg5bx.westus3-01.azurewebsites.net"
     ],
     credentials: true,
   })
 );
+
+// Resolve __dirname for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Ensure uploads directory exists
+const uploadDir = path.join(__dirname, "uploads");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
+}
+
+// Multer storage: files stored as <userId>-timestamp.ext
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname) || "";
+    cb(null, `${req.user._id}-${Date.now()}${ext}`);
+  },
+});
+
+const upload = multer({ storage });
+
+// Serve uploaded files
+app.use("/uploads", express.static(uploadDir));
 
 app.use(express.json());
 app.use(cookieParser());
@@ -196,6 +222,65 @@ async function start() {
           myUserId: req.user._id,
           text,
         });
+        res.status(201).json(result);
+      } catch (err) {
+        res.status(400).json({ error: err.message });
+      }
+    });
+
+    app.get("/me", requireAuth, async (req, res) => {
+      try {
+        const userId = req.user._id;
+
+        // 1. Fetch the user from DB
+        const user = await db.findUserById(userId);
+        if (!user) {
+          return res.status(404).json({ error: "User not found" });
+        }
+
+        // 2. Fetch that user's items
+        const items = await itemServices.getItemsByUserId(userId);
+        const mappedItems = items.map(itemServices.mapItemToResponse);
+
+        // 3. Return a clean profile object
+        res.status(200).json({
+          id: user._id,
+          username: user.username,
+          displayName: user.displayName,
+          bio: user.bio || "",
+          profilePicture: user.profilePicture,
+          itemsListed: mappedItems,
+        });
+      } catch (err) {
+        console.error("Error fetching /me:", err);
+        res.status(500).json({ error: err.message });
+      }
+    });
+
+    app.patch("/me", requireAuth, async (req, res) => {
+      try {
+        const userId = req.user._id;
+        const { username, displayName, bio, profilePicture } = req.body;
+
+        const updates = {};
+        if (username !== undefined) updates.username = username;
+        if (displayName !== undefined) updates.displayName = displayName;
+        if (bio !== undefined) updates.bio = bio;
+        if (profilePicture !== undefined && profilePicture !== "") {
+          updates.profilePicture = profilePicture;
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(userId, updates, {
+          new: true,
+          runValidators: true,
+        });
+
+        if (!updatedUser) {
+          return res.status(404).json({ error: "User not found" });
+        }
+
+        const items = await itemServices.getItemsByUserId(userId);
+        const mappedItems = items.map(itemServices.mapItemToResponse);
 
         res.status(201).json(newMessage);
       } catch (err) {

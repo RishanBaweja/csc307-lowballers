@@ -1,10 +1,22 @@
-export default function ProfileHeader({ username, info }) {
+// ProfileHeader.jsx
+export default function ProfileHeader({
+  username,
+  bio,
+  meta,
+  profilePicture,
+  onEditClick,
+  onAddItemClick,
+}) {
+  const avatarSrc = profilePicture || "./simplePFP.jpg";
+
   return (
     <header className="profile-header">
       <div className="profile-topbar">
         <input className="searchabr" placeholder="Search for Item" />
 
-        <button className="add-item">+</button>
+        <button className="add-item" type="button" onClick={onAddItemClick}>
+          +
+        </button>
         <button className="inbox">Inbox</button>
         <img src="./example.png" alt="Your Profile" className="avatar-sm" />
       </div>
