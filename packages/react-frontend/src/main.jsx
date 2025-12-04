@@ -12,6 +12,7 @@ import "./main.css";
 import AddItem from "./pages/AddItem.jsx";
 
 import ProfilePage from "./profile_pages/ProfilePage.jsx";
+import EditProfilePage from "./profile_pages/EditProfilePage.jsx";
 import ConversationPage from "./pages/ConversationPage.jsx";
 
 // If network connectivity issues, no defined route, user error, etc.
@@ -57,6 +58,7 @@ const router = createBrowserRouter([
         element: <ConversationPage />,
       },
       { path: "profile", element: <ProfilePage /> },
+      { path: "profile/edit", element: <EditProfilePage /> },
     ],
   },
 ]);

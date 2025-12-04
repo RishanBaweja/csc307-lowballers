@@ -112,8 +112,62 @@ export default function EditProfilePage() {
     : "";
 
   return (
-    <div style={{ padding: 16 }}>
-      <h1>Edit Profile Page</h1>
+    <div className="profile-page">
+      <form className="edit-profile-form" onSubmit={handleSave}>
+        <h1>Edit profile</h1>
+
+        <label className="form-label">
+          Display name
+          <input
+            className="form-input"
+            value={displayName}
+            onChange={(e) => setDisplayName(e.target.value)}
+          />
+        </label>
+
+        <label className="form-label">
+          Bio
+          <textarea
+            className="form-textarea"
+            rows={4}
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
+          />
+        </label>
+
+        <label className="form-label">
+          Profile picture
+          {currentAvatarSrc && (
+            <div style={{ marginBottom: 8 }}>
+              <img
+                src={currentAvatarSrc}
+                alt="Current avatar"
+                style={{ maxWidth: 120, borderRadius: "50%" }}
+              />
+            </div>
+          )}
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setNewAvatarFile(e.target.files[0] || null)}
+          />
+        </label>
+
+        {error && (
+          <div className="form-error" style={{ marginTop: 8 }}>
+            {error}
+          </div>
+        )}
+
+        <div className="form-buttons">
+          <button type="submit" disabled={saving}>
+            {saving ? "Saving..." : "Save"}
+          </button>
+          <button type="button" onClick={handleCancel}>
+            Cancel
+          </button>
+        </div>
+      </form>
     </div>
   );
 }
