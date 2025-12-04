@@ -7,12 +7,7 @@ import itemServices from "./item-services.js";
 import messageServices from "./message-services.js";
 import authRoutes from "./auth-routes.js";
 import cookieParser from "cookie-parser";
-import multer from "multer";
-import path from "path";
-import fs from "fs";
-import { fileURLToPath } from "url";
 import { attachUserIfPresent, requireAuth } from "./auth-middleware.js";
-import { User } from "./db-schema.js";
 
 // Load .env from project root
 config({ path: "../../.env" });
@@ -149,37 +144,6 @@ async function start() {
       }
     });
 
-    // Search items by name and location
-    app.get("/items/search", async (req, res) => {
-      try {
-        const { q, location } = req.query;
-        if ((!q || q.trim() === "") && !location) {
-          return res.status(400).json({ error: "Search query or location filter is required" });
-        }
-        
-        let items;
-        if (location && (!q || q.trim() === "")) {
-          // Filter by location only
-          items = await itemServices.getItemsByLocation(location);
-        } else if (q && q.trim() !== "" && !location) {
-          // Search by name/location text only
-          items = await itemServices.searchItemsByName(q.trim());
-        } else {
-          // Combined search and location filter
-          items = await itemServices.searchItemsWithLocationFilter(q.trim(), location);
-        }
-        
-        const mapped = items.map(itemServices.mapItemToResponse);
-        res.status(200).json({ items_list: mapped });
-      } catch (err) {
-        console.error("could not search items:", err);
-        res.status(500).json({ error: err.message });
-      }
-    });
-
-    //ISSUE: "error": "Cast to ObjectId failed for value \"1\" (type number) at path \"_id\" for model \"User\""
-    //RUN TESTS ON THIS LATER
-    // http://localhost:8000/items/6913e0ae150080701a2af553
     app.get("/items/:id", async (req, res) => {
       try {
         const { id } = req.params;
@@ -196,8 +160,7 @@ async function start() {
 
     app.post("/items", async (req, res) => {
       try {
-        const { name, description, location, amount, genre, image } =
-          req.body;
+        const { name, description, location, amount, genre, image } = req.body;
         const newItem = await itemServices.addItem({
           userID: req.user?._id,
           itemName: name,
@@ -241,7 +204,7 @@ async function start() {
       try {
         const { conversationId } = req.params;
         const messages =
-          await messageServices.getMessagesForUser(conversationId);
+          await messageServices.getMessagesForConversation(conversationId);
         res.status(200).json(messages);
       } catch (err) {
         res.status(404).json({ error: err.message });
@@ -249,13 +212,14 @@ async function start() {
     });
 
     // Send a message
-    app.post("/conversation/sendMessage", async (req, res) => {
+    app.post("/conversation/:conversationId/messages", async (req, res) => {
       try {
-        const { otherUserId, itemId, text } = req.body;
-        const result = await messageServices.sendMessage({
+        const { conversationId } = req.params;
+        const { text } = req.body;
+
+        const newMessage = await messageServices.sendMessageToConversation({
+          conversationId,
           myUserId: req.user._id,
-          otherUserId,
-          itemId,
           text,
         });
         res.status(201).json(result);
@@ -318,48 +282,12 @@ async function start() {
         const items = await itemServices.getItemsByUserId(userId);
         const mappedItems = items.map(itemServices.mapItemToResponse);
 
-        res.status(200).json({
-          id: updatedUser._id,
-          username: updatedUser.username,
-          displayName: updatedUser.displayName,
-          bio: updatedUser.bio || "",
-          profilePicture: updatedUser.profilePicture,
-          itemsListed: mappedItems,
-        });
+        res.status(201).json(newMessage);
       } catch (err) {
-        console.error("Error updating /me:", err);
-        res.status(500).json({ error: err.message });
+        console.error("sendMessageToConversation error:", err);
+        res.status(400).json({ error: err.message });
       }
     });
-
-    // Upload & save profile picture
-    app.post(
-      "/me/profile-picture",
-      requireAuth,
-      upload.single("profilePicture"), // "avatar" must match the field name in the form
-      async (req, res) => {
-        try {
-          if (!req.file) {
-            return res.status(400).json({ error: "No file uploaded" });
-          }
-
-          // This is the URL the frontend can use
-          const profilePictureUrl = `/uploads/${req.file.filename}`;
-
-          // Save it on the user document
-          await User.findByIdAndUpdate(req.user._id, {
-            profilePicture: profilePictureUrl,
-          });
-
-          res.status(200).json({ profilePicture: profilePictureUrl });
-        } catch (err) {
-          console.error("Error uploading profile picture:", err);
-          res.status(500).json({ error: "Failed to upload profile picture" });
-        }
-      }
-    );
-
-
 
     app.listen(port, () => {
       console.log(`Example app listening at http://localhost:${port}`);
@@ -369,4 +297,28 @@ async function start() {
     process.exit(1);
   }
 }
+
+app.post("/conversation/start", async (req, res) => {
+  try {
+    const { otherUserId, itemId } = req.body;
+    if (!otherUserId || !itemId) {
+      return res
+        .status(400)
+        .json({ error: "otherUserId and itemId are required" });
+    }
+
+    const conv = await messageServices.startConversationFromItem({
+      myUserId: req.user._id, // from auth cookie
+      otherUserId,
+      itemId,
+    });
+
+    res.status(201).json({
+      conversationId: conv._id,
+      conversation: conv,
+    });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
 start();
