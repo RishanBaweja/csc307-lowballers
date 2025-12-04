@@ -15,9 +15,7 @@
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -119,28 +117,4 @@
   padding: 3rem 1rem;
   color: #999;
   font-size: 1.1rem;
-}
-
-.messageButton {
-  background-color: #1877f2;
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    transform 0.1s ease;
-  width: 100%;
-  margin-top: 12px;
-}
-
-.messageButton:hover {
-  background-color: #166fe5;
-}
-
-.messageButton:active {
-  transform: scale(0.97);
 }

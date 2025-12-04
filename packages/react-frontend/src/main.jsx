@@ -7,12 +7,14 @@ import Layout from "./Layout.jsx";
 import Home from "./pages/Home.jsx";
 import Inbox from "./pages/Inbox.jsx";
 import Items from "./pages/Items.jsx";
-import { AuthProvider } from "./context/AuthContext.jsx";
+import {AuthProvider} from "./context/AuthContext.jsx";
 import "./main.css";
 import AddItem from "./pages/AddItem.jsx";
 
 import ProfilePage from "./profile_pages/ProfilePage.jsx";
-import ConversationPage from "./pages/ConversationPage.jsx";
+import EditProfilePage from "./profile_pages/EditProfilePage.jsx";
+
+
 
 // If network connectivity issues, no defined route, user error, etc.
 function RouteError() {
@@ -52,11 +54,8 @@ const router = createBrowserRouter([
       { path: "inbox", element: <Inbox /> },
       { path: "items", element: <Items /> },
       { path: "add-item", element: <AddItem /> },
-      {
-        path: "/conversation/:conversationId/messages",
-        element: <ConversationPage />,
-      },
       { path: "profile", element: <ProfilePage /> },
+      { path: "profile/edit", element: <EditProfilePage /> },
     ],
   },
 ]);
