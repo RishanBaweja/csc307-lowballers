@@ -1,5 +1,6 @@
 // ProfileHeader.jsx
 export default function ProfileHeader({
+  displayName,
   username,
   bio,
   meta,
@@ -7,6 +8,7 @@ export default function ProfileHeader({
   onEditClick,
   onAddItemClick,
 }) {
+  const nameToShow = displayName || username;
   const avatarSrc = profilePicture || "./simplePFP.jpg";
 
   return (
@@ -32,7 +34,7 @@ export default function ProfileHeader({
           className="avatar-lg"
         />
         <div className="username-block">
-          <div className="username">{username}</div>
+          <div className="username">{nameToShow}</div>
           {meta && <div className="meta">{meta}</div>}
           <button className="edit-profile-btn" onClick={onEditClick}>
             Edit profile
@@ -46,4 +48,3 @@ export default function ProfileHeader({
     </header>
   );
 }
-
