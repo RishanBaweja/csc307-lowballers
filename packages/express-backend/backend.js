@@ -302,7 +302,9 @@ async function start() {
         if (username !== undefined) updates.username = username;
         if (displayName !== undefined) updates.displayName = displayName;
         if (bio !== undefined) updates.bio = bio;
-        if (profilePicture !== undefined) updates.profilePicture = profilePicture;
+        if (profilePicture !== undefined && profilePicture !== "") {
+          updates.profilePicture = profilePicture;
+        }
 
         const updatedUser = await User.findByIdAndUpdate(userId, updates, {
           new: true,

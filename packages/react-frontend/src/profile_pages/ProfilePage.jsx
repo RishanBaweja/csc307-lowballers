@@ -72,6 +72,7 @@ export default function ProfilePage() {
         } posted`}
         profilePicture={avatarSrc}
         onEditClick={() => navigate("/profile/edit")}
+        onAddItemClick={() => navigate("/add-item")}
       />
 
       <main className="items-list">

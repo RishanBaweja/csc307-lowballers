@@ -70,17 +70,21 @@ export default function EditProfilePage() {
       }
 
       // 2) Now update the rest of the profile (and profilePicture)
-      const patchRes = await fetch(`${API_BASE}/me`, {
+      const body = {
+        displayName,
+        bio,
+      };
+
+      // only include profilePicture if we actually have one
+      if (profilePictureUrl) {
+        body.profilePicture = profilePictureUrl;
+      }
+
+      const patchRes = await fetch(`${API_BASE_URL}/me`, {
         method: "PATCH",
         credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          displayName,
-          bio,
-          profilePicture: profilePictureUrl,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
       });
 
       if (!patchRes.ok) {
